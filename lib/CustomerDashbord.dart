@@ -1,7 +1,7 @@
 import 'package:abcbank/main.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-
+import 'indicator.dart';
 
 class CustomerHome extends StatelessWidget {
   const CustomerHome({Key? key}) : super(key: key);
@@ -57,13 +57,13 @@ class CustomerHome extends StatelessWidget {
                     ),
                     padding: const EdgeInsets.only(top: 20),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 50,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Table(
-                      border: TableBorder.all(),
+                      // border: TableBorder.all(),
                       children: const [
                         TableRow(children: [
                           Text(
@@ -197,12 +197,26 @@ class CustomerHome extends StatelessWidget {
                           // width: 300,
                         ),
                       ),
-
                     ],
                   ),
                 ),
-                SizedBox(height: 200,),
-                Container( child: PieChartSample1(),width: 300,height: 300,)        
+                SizedBox(
+                  height: 100,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 230, 217, 217),
+                          spreadRadius: 10,
+                          blurRadius: 20,
+                        )
+                      ]),
+                  child: PieChartSample2(),
+                  width: 500,
+                )
               ],
             ),
           )
@@ -236,7 +250,45 @@ class Sidebar extends StatelessWidget {
                   SizedBox(
                     width: 10,
                   ),
-                  _menuItem(title: 'Home')
+                  TextButton(onPressed: () {}, child: _menuItem(title: 'Home'))
+                  // _menuItem(title: 'Home')
+                ],
+              ),
+              Row(children: [
+                const Icon(
+                  Icons.monetization_on_outlined,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Transaction()));
+                    },
+                    child: _menuItem(title: 'Transaction')),
+              ]),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.monetization_on_outlined,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  TextButton(onPressed: (){
+                    Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => deposite()));
+                  }, child: _menuItem(title: 'Deposite'))
+                  // _menuItem(title: 'Transaction')
                 ],
               ),
               Row(
@@ -249,20 +301,13 @@ class Sidebar extends StatelessWidget {
                   SizedBox(
                     width: 10,
                   ),
-                  _menuItem(title: 'Transaction')
-                ],
-              ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.monetization_on_outlined,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  _menuItem(title: 'Transaction')
+                  TextButton(onPressed: (){
+                    Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Widthdraw()));
+                  }, child: _menuItem(title: 'Widthdraw'))
+                  // _menuItem(title: 'Transaction')
                 ],
               ),
             ],
@@ -345,29 +390,747 @@ class Sidebar extends StatelessWidget {
   }
 }
 
-class PieChartSample1 extends StatefulWidget {
+class PieChartSample2 extends StatefulWidget {
+  const PieChartSample2({Key? key}) : super(key: key);
+
   @override
-  State<StatefulWidget> createState() => PieChartSample1State();
+  State<StatefulWidget> createState() => PieChart2State();
 }
 
-class PieChartSample1State extends State {
-  // late int touchedIndex;
+class PieChart2State extends State {
+  int touchedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(child: PageView(
-        children: <Widget>[
-          PieChart(PieChartData(
-            sections: data,
-          ),)
-        ],
-      )),
+    return AspectRatio(
+      aspectRatio: 1.3,
+      child: Card(
+        color: Colors.white,
+        child: Row(
+          children: <Widget>[
+            const SizedBox(
+              height: 18,
+            ),
+            Expanded(
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: PieChart(
+                  PieChartData(
+                      pieTouchData: PieTouchData(touchCallback:
+                          (FlTouchEvent event, pieTouchResponse) {
+                        setState(() {
+                          if (!event.isInterestedForInteractions ||
+                              pieTouchResponse == null ||
+                              pieTouchResponse.touchedSection == null) {
+                            touchedIndex = -1;
+                            return;
+                          }
+                          touchedIndex = pieTouchResponse
+                              .touchedSection!.touchedSectionIndex;
+                        });
+                      }),
+                      borderData: FlBorderData(
+                        show: false,
+                      ),
+                      sectionsSpace: 0,
+                      centerSpaceRadius: 40,
+                      sections: showingSections()),
+                ),
+              ),
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const <Widget>[
+                Indicator(
+                  color: Color(0xff0293ee),
+                  text: 'Income',
+                  isSquare: true,
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                Indicator(
+                  color: Color(0xfff8b250),
+                  text: 'Widthdrow',
+                  isSquare: true,
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                // Indicator(
+                //   color: Color(0xff845bef),
+                //   text: 'Third',
+                //   isSquare: true,
+                // ),
+                // SizedBox(
+                //   height: 4,
+                // ),
+                // Indicator(
+                //   color: Color(0xff13d38e),
+                //   text: 'Fourth',
+                //   isSquare: true,
+                // ),
+                // SizedBox(
+                //   height: 18,
+                // ),
+              ],
+            ),
+            const SizedBox(
+              width: 28,
+            ),
+          ],
+        ),
+      ),
     );
+  }
+
+  List<PieChartSectionData> showingSections() {
+    return List.generate(2, (i) {
+      final isTouched = i == touchedIndex;
+      final fontSize = isTouched ? 25.0 : 16.0;
+      final radius = isTouched ? 60.0 : 50.0;
+      switch (i) {
+        case 0:
+          return PieChartSectionData(
+            color: const Color(0xff0293ee),
+            value: 40,
+            title: '40%',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xffffffff)),
+          );
+        case 1:
+          return PieChartSectionData(
+            color: const Color(0xfff8b250),
+            value: 30,
+            title: '30%',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xffffffff)),
+          );
+        // case 2:
+        //   return PieChartSectionData(
+        //     color: const Color(0xff845bef),
+        //     value: 15,
+        //     title: '15%',
+        //     radius: radius,
+        //     titleStyle: TextStyle(
+        //         fontSize: fontSize,
+        //         fontWeight: FontWeight.bold,
+        //         color: const Color(0xffffffff)),
+        //   );
+        // case 3:
+        //   return PieChartSectionData(
+        //     color: const Color(0xff13d38e),
+        //     value: 15,
+        //     title: '15%',
+        //     radius: radius,
+        //     titleStyle: TextStyle(
+        //         fontSize: fontSize,
+        //         fontWeight: FontWeight.bold,
+        //         color: const Color(0xffffffff)),
+        //   );
+        default:
+          throw Error();
+      }
+    });
   }
 }
 
-List<PieChartSectionData> data = [
-  PieChartSectionData(title: '70%', color: Colors.green[600],value: 70),
-  PieChartSectionData(title: '30%', color: Colors.red[400],value: 30),
-];
+class Transaction extends StatelessWidget {
+  const Transaction({Key? key}) : super(key: key);
+  
+
+  @override
+  Widget build(BuildContext context) {
+    String _accNumber ='' ;
+  String _amount ='';
+  String _datetime ='';
+  // final String _dateTime;
+  String _DessAccNumber ='';
+    return Scaffold(
+        body: Row(
+      children: [
+        Expanded(
+            flex: 4,
+            child: Container(
+              child: Column(
+                children: [
+                  const Text(
+                    "ABC Bank",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 50,
+                    ),
+                  ),
+                  // ignore: prefer_const_constructors
+                  SizedBox(
+                    height: 20,
+                  ),
+                  const Text(
+                    "Transaction",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: 500,
+                    child: TextField(
+                      decoration: InputDecoration(
+                          labelText: 'Account Number',
+                          suffixIcon: const Icon(Icons.account_circle_outlined,
+                              color: Colors.grey),
+                          fillColor: Colors.blueGrey[50],
+                          filled: true,
+                          labelStyle: const TextStyle(fontSize: 12),
+                          contentPadding: const EdgeInsets.only(left: 30),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 0, 128, 255)),
+                            borderRadius: BorderRadius.circular(15),
+                          )),
+                      onChanged: (val) {
+                        _accNumber = val;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    width: 500,
+                    child: TextField(
+                      decoration: InputDecoration(
+                          labelText: 'Transaction Amount',
+                          suffixIcon: const Icon(Icons.monetization_on_outlined,
+                              color: Colors.grey),
+                          fillColor: Colors.blueGrey[50],
+                          filled: true,
+                          labelStyle: const TextStyle(fontSize: 12),
+                          contentPadding: const EdgeInsets.only(left: 30),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 0, 128, 255)),
+                            borderRadius: BorderRadius.circular(15),
+                          )),
+                      onChanged: (val) {
+                        _amount = val;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    width: 500,
+                    child: TextField(
+                      decoration: InputDecoration(
+                          labelText: 'Date/Time',
+                          suffixIcon: const Icon(Icons.date_range_outlined,
+                              color: Colors.grey),
+                          fillColor: Colors.blueGrey[50],
+                          filled: true,
+                          labelStyle: const TextStyle(fontSize: 12),
+                          contentPadding: const EdgeInsets.only(left: 30),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 0, 128, 255)),
+                            borderRadius: BorderRadius.circular(15),
+                          )),
+                      onChanged: (val) {
+                        _datetime = val;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  // ignore: sized_box_for_whitespace
+                  Container(
+                    width: 500,
+                    child: TextField(
+                      decoration: InputDecoration(
+                          labelText: 'Destination Account Number',
+                          // counterText: 'Forgot password?',
+                          suffixIcon: const Icon(Icons.account_circle_outlined,
+                              color: Colors.grey),
+                          fillColor: Colors.blueGrey[50],
+                          filled: true,
+                          labelStyle: const TextStyle(fontSize: 12),
+                          contentPadding: const EdgeInsets.only(left: 30),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 0, 128, 255)),
+                            borderRadius: BorderRadius.circular(15),
+                          )),
+                      onChanged: (val) {
+                        _DessAccNumber = val;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Container(
+                    width: 500,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color.fromARGB(255, 209, 196, 233),
+                            spreadRadius: 10,
+                            blurRadius: 20,
+                          )
+                        ]),
+                    child: ElevatedButton(
+                      child: Container(
+                        width: 500,
+                        height: 50,
+                        child: const Center(child: Text('Widthdraw')),
+                      ),
+                      onPressed: () {
+                        // print(_accNumber)
+                        print("Account Number : "+_accNumber);
+                        print("Widraw Amount : "+_amount);
+                        print("Date/Time : "+_datetime);
+                        print("Destination Account Number : "+_DessAccNumber);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CustomerHome()));
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.deepPurple,
+                          onPrimary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                    ),
+                  )
+                ],
+              ),
+            )),
+      ],
+    ));
+  }
+}
+
+class Widthdraw extends StatelessWidget {
+  const Widthdraw({ Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    String _accNumber ='' ;
+  String _amount ='';
+  String _datetime ='';
+  // final String _dateTime;
+  String _DessAccNumber ='';
+    return Scaffold(
+        body: Row(
+      children: [
+        Expanded(
+            flex: 4,
+            child: Container(
+              child: Column(
+                children: [
+                  const Text(
+                    "ABC Bank",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 50,
+                    ),
+                  ),
+                  // ignore: prefer_const_constructors
+                  SizedBox(
+                    height: 20,
+                  ),
+                  const Text(
+                    "Widthdraw",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: 500,
+                    child: TextField(
+                      decoration: InputDecoration(
+                          labelText: 'Account Number',
+                          suffixIcon: const Icon(Icons.account_circle_outlined,
+                              color: Colors.grey),
+                          fillColor: Colors.blueGrey[50],
+                          filled: true,
+                          labelStyle: const TextStyle(fontSize: 12),
+                          contentPadding: const EdgeInsets.only(left: 30),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 0, 128, 255)),
+                            borderRadius: BorderRadius.circular(15),
+                          )),
+                      onChanged: (val) {
+                        _accNumber = val;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    width: 500,
+                    child: TextField(
+                      decoration: InputDecoration(
+                          labelText: 'Widthdraw Amount',
+                          suffixIcon: const Icon(Icons.monetization_on_outlined,
+                              color: Colors.grey),
+                          fillColor: Colors.blueGrey[50],
+                          filled: true,
+                          labelStyle: const TextStyle(fontSize: 12),
+                          contentPadding: const EdgeInsets.only(left: 30),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 0, 128, 255)),
+                            borderRadius: BorderRadius.circular(15),
+                          )),
+                      onChanged: (val) {
+                        _amount = val;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    width: 500,
+                    child: TextField(
+                      decoration: InputDecoration(
+                          labelText: 'Date/Time',
+                          suffixIcon: const Icon(Icons.date_range_outlined,
+                              color: Colors.grey),
+                          fillColor: Colors.blueGrey[50],
+                          filled: true,
+                          labelStyle: const TextStyle(fontSize: 12),
+                          contentPadding: const EdgeInsets.only(left: 30),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 0, 128, 255)),
+                            borderRadius: BorderRadius.circular(15),
+                          )),
+                      onChanged: (val) {
+                        _datetime = val;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  // ignore: sized_box_for_whitespace
+                  // Container(
+                  //   width: 500,
+                  //   child: TextField(
+                  //     decoration: InputDecoration(
+                  //         labelText: 'Destination Account Number',
+                  //         // counterText: 'Forgot password?',
+                  //         suffixIcon: const Icon(Icons.account_circle_outlined,
+                  //             color: Colors.grey),
+                  //         fillColor: Colors.blueGrey[50],
+                  //         filled: true,
+                  //         labelStyle: const TextStyle(fontSize: 12),
+                  //         contentPadding: const EdgeInsets.only(left: 30),
+                  //         enabledBorder: OutlineInputBorder(
+                  //           borderSide: const BorderSide(color: Colors.grey),
+                  //           borderRadius: BorderRadius.circular(15),
+                  //         ),
+                  //         focusedBorder: OutlineInputBorder(
+                  //           borderSide: const BorderSide(
+                  //               color: Color.fromARGB(255, 0, 128, 255)),
+                  //           borderRadius: BorderRadius.circular(15),
+                  //         )),
+                  //     onChanged: (val) {
+                  //       _DessAccNumber = val;
+                  //     },
+                  //   ),
+                  // ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Container(
+                    width: 500,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color.fromARGB(255, 209, 196, 233),
+                            spreadRadius: 10,
+                            blurRadius: 20,
+                          )
+                        ]),
+                    child: ElevatedButton(
+                      child: Container(
+                        width: 500,
+                        height: 50,
+                        child: const Center(child: Text('Widthdraw')),
+                      ),
+                      onPressed: () {
+                        // print(_accNumber)
+                        print("Account Number : "+_accNumber);
+                        print("Widraw Amount : "+_amount);
+                        print("Date/Time : "+_datetime);
+                        print("Destination Account Number : "+_DessAccNumber);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CustomerHome()));
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.deepPurple,
+                          onPrimary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                    ),
+                  )
+                ],
+              ),
+            )),
+      ],
+    ));
+  }
+}
+
+class deposite extends StatelessWidget {
+  const deposite({ Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+  String _accNumber ='' ;
+  String _amount ='';
+  String _datetime ='';
+  // final String _dateTime;
+  String _DessAccNumber ='';
+    return Scaffold(
+        body: Row(
+      children: [
+        Expanded(
+            flex: 4,
+            child: Container(
+              child: Column(
+                children: [
+                  const Text(
+                    "ABC Bank",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 50,
+                    ),
+                  ),
+                  // ignore: prefer_const_constructors
+                  SizedBox(
+                    height: 20,
+                  ),
+                  const Text(
+                    "Deposite",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: 500,
+                    child: TextField(
+                      decoration: InputDecoration(
+                          labelText: 'Account Number',
+                          suffixIcon: const Icon(Icons.account_circle_outlined,
+                              color: Colors.grey),
+                          fillColor: Colors.blueGrey[50],
+                          filled: true,
+                          labelStyle: const TextStyle(fontSize: 12),
+                          contentPadding: const EdgeInsets.only(left: 30),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 0, 128, 255)),
+                            borderRadius: BorderRadius.circular(15),
+                          )),
+                      onChanged: (val) {
+                        _accNumber = val;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    width: 500,
+                    child: TextField(
+                      decoration: InputDecoration(
+                          labelText: 'Deposite Amount',
+                          suffixIcon: const Icon(Icons.monetization_on_outlined,
+                              color: Colors.grey),
+                          fillColor: Colors.blueGrey[50],
+                          filled: true,
+                          labelStyle: const TextStyle(fontSize: 12),
+                          contentPadding: const EdgeInsets.only(left: 30),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 0, 128, 255)),
+                            borderRadius: BorderRadius.circular(15),
+                          )),
+                      onChanged: (val) {
+                        _amount = val;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    width: 500,
+                    child: TextField(
+                      decoration: InputDecoration(
+                          labelText: 'Date/Time',
+                          suffixIcon: const Icon(Icons.date_range_outlined,
+                              color: Colors.grey),
+                          fillColor: Colors.blueGrey[50],
+                          filled: true,
+                          labelStyle: const TextStyle(fontSize: 12),
+                          contentPadding: const EdgeInsets.only(left: 30),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 0, 128, 255)),
+                            borderRadius: BorderRadius.circular(15),
+                          )),
+                      onChanged: (val) {
+                        _datetime = val;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  // ignore: sized_box_for_whitespace
+                  // Container(
+                  //   width: 500,
+                  //   child: TextField(
+                  //     decoration: InputDecoration(
+                  //         labelText: 'Destination Account Number',
+                  //         // counterText: 'Forgot password?',
+                  //         suffixIcon: const Icon(Icons.account_circle_outlined,
+                  //             color: Colors.grey),
+                  //         fillColor: Colors.blueGrey[50],
+                  //         filled: true,
+                  //         labelStyle: const TextStyle(fontSize: 12),
+                  //         contentPadding: const EdgeInsets.only(left: 30),
+                  //         enabledBorder: OutlineInputBorder(
+                  //           borderSide: const BorderSide(color: Colors.grey),
+                  //           borderRadius: BorderRadius.circular(15),
+                  //         ),
+                  //         focusedBorder: OutlineInputBorder(
+                  //           borderSide: const BorderSide(
+                  //               color: Color.fromARGB(255, 0, 128, 255)),
+                  //           borderRadius: BorderRadius.circular(15),
+                  //         )),
+                  //     onChanged: (val) {
+                  //       _DessAccNumber = val;
+                  //     },
+                  //   ),
+                  // ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Container(
+                    width: 500,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color.fromARGB(255, 209, 196, 233),
+                            spreadRadius: 10,
+                            blurRadius: 20,
+                          )
+                        ]),
+                    child: ElevatedButton(
+                      child: Container(
+                        width: 500,
+                        height: 50,
+                        child: const Center(child: Text('Widthdraw')),
+                      ),
+                      onPressed: () {
+                        // print(_accNumber)
+                        print("Account Number : "+_accNumber);
+                        print("deposite Amount : "+_amount);
+                        print("Date/Time : "+_datetime);
+                        // print("Destination Account Number : "+_DessAccNumber);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CustomerHome()));
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.deepPurple,
+                          onPrimary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                    ),
+                  )
+                ],
+              ),
+            )),
+      ],
+    ));
+  }
+}
