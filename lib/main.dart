@@ -1,3 +1,4 @@
+import 'package:abcbank/AdminDashboard.dart';
 import 'package:abcbank/CustomerDashbord.dart';
 import 'package:flutter/material.dart';
 
@@ -43,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             flex: 5,
             child: Container(
-                color: Colors.greenAccent[700],
+                color: Colors.black87,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -184,7 +185,15 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () {
               print("User Name : "+_username);
               print("Password : "+_password);
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CustomerHome()));
+              if(_username == 'admin'){
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AdminHome()));
+              }else if(_username == 'customer'){
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CustomerHome()));
+              }else if(_username == 'employee'){
+                print('employee dashboard');
+              }else{
+                print('invalid');
+              }
             },
             style: ElevatedButton.styleFrom(
                 primary: Colors.deepPurple,

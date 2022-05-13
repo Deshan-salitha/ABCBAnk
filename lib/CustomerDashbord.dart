@@ -1,10 +1,28 @@
 import 'package:abcbank/main.dart';
+import 'package:abcbank/model/user_repose.dart';
+import 'package:abcbank/navbar/sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'indicator.dart';
+import 'package:http/http.dart' as http;
 
 class CustomerHome extends StatelessWidget {
-  const CustomerHome({Key? key}) : super(key: key);
+  CustomerHome({Key? key}) : super(key: key);
+  List<UserResponse>? userresponse;
+  void getAllUsers() async {
+    var response =
+        await http.get(Uri.parse("http://localhost:8080/userall"));
+    print("Status Code");
+    print(response.statusCode);
+    // if(response.statusCode == 200){
+    //    userresponse = userResponseFromJson(response.body);
+    //    for(int i =0 ; i < userresponse!.length; i++){
+    //      print(userresponse![i].name);
+    //    }
+    // }
+  }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +32,7 @@ class CustomerHome extends StatelessWidget {
           Expanded(
               flex: 3,
               child: Container(
-                color: Colors.black,
+                color: Colors.black87,
                 child: Column(
                   // mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -177,7 +195,12 @@ class CustomerHome extends StatelessWidget {
                         ]),
                       ],
                     ),
-                  )
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        getAllUsers();
+                      },
+                      child: Text("getData")),
                 ]),
               )),
           Expanded(
@@ -223,169 +246,6 @@ class CustomerHome extends StatelessWidget {
         ],
       ),
       // SfCircularChart(),
-    );
-  }
-}
-
-class Sidebar extends StatelessWidget {
-  const Sidebar({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 30),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Icon(
-                    Icons.home,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  TextButton(onPressed: () {}, child: _menuItem(title: 'Home'))
-                  // _menuItem(title: 'Home')
-                ],
-              ),
-              Row(children: [
-                const Icon(
-                  Icons.monetization_on_outlined,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Transaction()));
-                    },
-                    child: _menuItem(title: 'Transaction')),
-              ]),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.monetization_on_outlined,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  TextButton(onPressed: (){
-                    Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => deposite()));
-                  }, child: _menuItem(title: 'Deposite'))
-                  // _menuItem(title: 'Transaction')
-                ],
-              ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.monetization_on_outlined,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  TextButton(onPressed: (){
-                    Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Widthdraw()));
-                  }, child: _menuItem(title: 'Widthdraw'))
-                  // _menuItem(title: 'Transaction')
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 500,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    child: const Icon(
-                      Icons.account_circle_outlined,
-                      color: Colors.white,
-                      size: 50,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Container(
-                    child: const Text(
-                      "Deshan Salitha",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MyHomePage(
-                                    title: "Home",
-                                  )));
-                    },
-                    child: Container(
-                      width: 400,
-                      height: 20,
-                      child: const Center(child: Text('LogOut')),
-                    )),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _menuItem({Icon, String title = '', bool isActive = false}) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 0),
-      child: Column(children: [
-        Text(
-          '$title',
-          style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 30,
-              color: isActive ? Colors.deepPurple : Colors.grey),
-        ),
-        // const SizedBox(
-        //   height: 60,
-        // ),
-        isActive
-            ? Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
-                decoration: BoxDecoration(
-                    color: Colors.deepPurple,
-                    borderRadius: BorderRadius.circular(30)),
-              )
-            : const SizedBox()
-      ]),
     );
   }
 }
@@ -545,15 +405,14 @@ class PieChart2State extends State {
 
 class Transaction extends StatelessWidget {
   const Transaction({Key? key}) : super(key: key);
-  
 
   @override
   Widget build(BuildContext context) {
-    String _accNumber ='' ;
-  String _amount ='';
-  String _datetime ='';
-  // final String _dateTime;
-  String _DessAccNumber ='';
+    String _accNumber = '';
+    String _amount = '';
+    String _datetime = '';
+    // final String _dateTime;
+    String _DessAccNumber = '';
     return Scaffold(
         body: Row(
       children: [
@@ -717,10 +576,10 @@ class Transaction extends StatelessWidget {
                       ),
                       onPressed: () {
                         // print(_accNumber)
-                        print("Account Number : "+_accNumber);
-                        print("Widraw Amount : "+_amount);
-                        print("Date/Time : "+_datetime);
-                        print("Destination Account Number : "+_DessAccNumber);
+                        print("Account Number : " + _accNumber);
+                        print("Widraw Amount : " + _amount);
+                        print("Date/Time : " + _datetime);
+                        print("Destination Account Number : " + _DessAccNumber);
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -742,15 +601,15 @@ class Transaction extends StatelessWidget {
 }
 
 class Widthdraw extends StatelessWidget {
-  const Widthdraw({ Key? key }) : super(key: key);
+  const Widthdraw({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String _accNumber ='' ;
-  String _amount ='';
-  String _datetime ='';
-  // final String _dateTime;
-  String _DessAccNumber ='';
+    String _accNumber = '';
+    String _amount = '';
+    String _datetime = '';
+    // final String _dateTime;
+    String _DessAccNumber = '';
     return Scaffold(
         body: Row(
       children: [
@@ -914,10 +773,10 @@ class Widthdraw extends StatelessWidget {
                       ),
                       onPressed: () {
                         // print(_accNumber)
-                        print("Account Number : "+_accNumber);
-                        print("Widraw Amount : "+_amount);
-                        print("Date/Time : "+_datetime);
-                        print("Destination Account Number : "+_DessAccNumber);
+                        print("Account Number : " + _accNumber);
+                        print("Widraw Amount : " + _amount);
+                        print("Date/Time : " + _datetime);
+                        print("Destination Account Number : " + _DessAccNumber);
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -939,15 +798,15 @@ class Widthdraw extends StatelessWidget {
 }
 
 class deposite extends StatelessWidget {
-  const deposite({ Key? key }) : super(key: key);
+  const deposite({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-  String _accNumber ='' ;
-  String _amount ='';
-  String _datetime ='';
-  // final String _dateTime;
-  String _DessAccNumber ='';
+    String _accNumber = '';
+    String _amount = '';
+    String _datetime = '';
+    // final String _dateTime;
+    String _DessAccNumber = '';
     return Scaffold(
         body: Row(
       children: [
@@ -1111,9 +970,9 @@ class deposite extends StatelessWidget {
                       ),
                       onPressed: () {
                         // print(_accNumber)
-                        print("Account Number : "+_accNumber);
-                        print("deposite Amount : "+_amount);
-                        print("Date/Time : "+_datetime);
+                        print("Account Number : " + _accNumber);
+                        print("deposite Amount : " + _amount);
+                        print("Date/Time : " + _datetime);
                         // print("Destination Account Number : "+_DessAccNumber);
                         Navigator.pushReplacement(
                             context,

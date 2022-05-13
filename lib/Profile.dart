@@ -1,3 +1,4 @@
+import 'package:abcbank/navbar/sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:abcbank/main.dart';
 import 'package:abcbank/CustomerDashbord.dart';
@@ -14,183 +15,105 @@ class profile extends StatelessWidget {
     return Scaffold(
         body: Row(
       children: [
+        Expanded(flex: 3, child: Container(color: Colors.black,child: Column(children: [Container(
+                      padding: const EdgeInsets.all(50),
+                      child: const Text(
+                        "ABC Bank",
+                        style: TextStyle(color: Colors.white, fontSize: 30),
+                      ),
+                    ),Sidebar()],)),),
         Expanded(
-            flex: 4,
+            flex: 9,
             child: Container(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                    // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "ABC Bank",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 50,
-                    ),
-                  ),
-                  // ignore: prefer_const_constructors
+                  // const Text(
+                  //   "ABC Bank",
+                  //   style: TextStyle(
+                  //     color: Colors.black,
+                  //     fontSize: 50,
+                  //   ),
+                  // ),
+                  // // ignore: prefer_const_constructors
                   SizedBox(
                     height: 20,
                   ),
-                  const Text(
-                    "Deposite",
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 20,
-                    ),
-                  ),
+                  const Icon(Icons.account_circle_outlined,
+                    color: Colors.grey,size: 100,),
                   const SizedBox(
                     height: 20,
                   ),
                   Container(
-                    width: 500,
-                    child: TextField(
-                      decoration: InputDecoration(
-                          labelText: 'Account Number',
-                          suffixIcon: const Icon(Icons.account_circle_outlined,
-                              color: Colors.grey),
-                          fillColor: Colors.blueGrey[50],
-                          filled: true,
-                          labelStyle: const TextStyle(fontSize: 12),
-                          contentPadding: const EdgeInsets.only(left: 30),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(15),
+                    padding: EdgeInsets.only(left: 100),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              // Icon(Icons.person,size: 50,),
+                              Text("01",style: TextStyle(fontSize: 20),),Padding(padding: EdgeInsets.all(30)),
+                            ],
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 0, 128, 255)),
-                            borderRadius: BorderRadius.circular(15),
-                          )),
-                      onChanged: (val) {
-                        _accNumber = val;
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                    width: 500,
-                    child: TextField(
-                      decoration: InputDecoration(
-                          labelText: 'Deposite Amount',
-                          suffixIcon: const Icon(Icons.monetization_on_outlined,
-                              color: Colors.grey),
-                          fillColor: Colors.blueGrey[50],
-                          filled: true,
-                          labelStyle: const TextStyle(fontSize: 12),
-                          contentPadding: const EdgeInsets.only(left: 30),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(15),
+                          Row(
+                            children: [
+                              // Icon(Icons.nam,size: 50,),
+                              Text("Deshan",style: TextStyle(fontSize: 20),),Padding(padding: EdgeInsets.all(30)),
+                            ],
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 0, 128, 255)),
-                            borderRadius: BorderRadius.circular(15),
-                          )),
-                      onChanged: (val) {
-                        _amount = val;
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                    width: 500,
-                    child: TextField(
-                      decoration: InputDecoration(
-                          labelText: 'Date/Time',
-                          suffixIcon: const Icon(Icons.date_range_outlined,
-                              color: Colors.grey),
-                          fillColor: Colors.blueGrey[50],
-                          filled: true,
-                          labelStyle: const TextStyle(fontSize: 12),
-                          contentPadding: const EdgeInsets.only(left: 30),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(15),
+                          Row(
+                            children: [
+                              // Icon(Icons.person,size: 50,),
+                              Text("Wickramaarachchi",style: TextStyle(fontSize: 20),),Padding(padding: EdgeInsets.all(30)),
+                            ],
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 0, 128, 255)),
-                            borderRadius: BorderRadius.circular(15),
-                          )),
-                      onChanged: (val) {
-                        _datetime = val;
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  // ignore: sized_box_for_whitespace
-                  // Container(
-                  //   width: 500,
-                  //   child: TextField(
-                  //     decoration: InputDecoration(
-                  //         labelText: 'Destination Account Number',
-                  //         // counterText: 'Forgot password?',
-                  //         suffixIcon: const Icon(Icons.account_circle_outlined,
-                  //             color: Colors.grey),
-                  //         fillColor: Colors.blueGrey[50],
-                  //         filled: true,
-                  //         labelStyle: const TextStyle(fontSize: 12),
-                  //         contentPadding: const EdgeInsets.only(left: 30),
-                  //         enabledBorder: OutlineInputBorder(
-                  //           borderSide: const BorderSide(color: Colors.grey),
-                  //           borderRadius: BorderRadius.circular(15),
-                  //         ),
-                  //         focusedBorder: OutlineInputBorder(
-                  //           borderSide: const BorderSide(
-                  //               color: Color.fromARGB(255, 0, 128, 255)),
-                  //           borderRadius: BorderRadius.circular(15),
-                  //         )),
-                  //     onChanged: (val) {
-                  //       _DessAccNumber = val;
-                  //     },
-                  //   ),
-                  // ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Container(
-                    width: 500,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(30),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color.fromARGB(255, 209, 196, 233),
-                            spreadRadius: 10,
-                            blurRadius: 20,
-                          )
-                        ]),
-                    child: ElevatedButton(
-                      child: Container(
-                        width: 500,
-                        height: 50,
-                        child: const Center(child: Text('Widthdraw')),
+                          Row(
+                            children: [
+                              // Icon(Icons.person,size: 50,),
+                              Text("Jayanthipura Polonnaruwa",style: TextStyle(fontSize: 20),),Padding(padding: EdgeInsets.all(30)),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              // Icon(Icons.person,size: 50,),
+                              Text("D@gmail.com",style: TextStyle(fontSize: 20),),Padding(padding: EdgeInsets.all(30)),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              // Icon(Icons.person,size: 50,),
+                              Text("Password",style: TextStyle(fontSize: 20),),Padding(padding: EdgeInsets.all(30)),
+                            ],
+                          ),
+                        ],
                       ),
-                      onPressed: () {
-                        // print(_accNumber)
-                        print("Account Number : "+_accNumber);
-                        print("deposite Amount : "+_amount);
-                        print("Date/Time : "+_datetime);
-                        // print("Destination Account Number : "+_DessAccNumber);
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CustomerHome()));
-                      },
-                      style: ElevatedButton.styleFrom(
-                          primary: Colors.deepPurple,
-                          onPrimary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                    ),
-                  )
-                ],
+                  ),
+                  // Container(
+                  //   child: ElevatedButton(
+                  //     child: Container(
+                  //       width: 500,
+                  //       height: 50,
+                  //       child: const Center(child: Text('Widthdraw')),
+                  //     ),
+                  //     onPressed: () {
+                  //       // print(_accNumber)
+                  //       print("Account Number : "+_accNumber);
+                  //       print("deposite Amount : "+_amount);
+                  //       print("Date/Time : "+_datetime);
+                  //       // print("Destination Account Number : "+_DessAccNumber);
+                  //       Navigator.pushReplacement(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => CustomerHome()));
+                  //     },
+                  //     style: ElevatedButton.styleFrom(
+                  //         primary: Colors.deepPurple,
+                  //         onPrimary: Colors.white,
+                  //         shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(10))),
+                  //   ),
+                  // )
+              ],
               ),
             )),
       ],
