@@ -1,33 +1,37 @@
+import 'package:abcbank/model/Auth_response.dart';
 import 'package:abcbank/model/user_repose.dart';
+import 'package:abcbank/main.dart';
 import 'package:abcbank/navbar/adminNavbar.dart';
 import 'package:abcbank/test.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:math_expressions/math_expressions.dart';
 import 'indicator.dart';
 import 'package:http/http.dart' as http;
 
 class AdminHome extends StatelessWidget {
-  AdminHome({Key? key}) : super(key: key);
-  UserResponse? userresponse;
-  bool loading = false;
-  void getAllUsers() async {
-    var response = await http.get(
-      Uri.parse("http://localhost:8080/userall"),
-      headers: {
-        "Authorization":
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTQGdtYWlsLmNvbSIsImV4cCI6MTY1MjQzNzY2NCwiaWF0IjoxNjUyNDAxNjY0fQ.I-YOwgKKmW1Yp2i7s1mgm8-9YTfXil0vtqTikbStK3c"
-      },
-    );
-    print("Status Code");
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      // print("got in to the function");
-      userresponse = userResponseFromJson(response.body);
-      for (int i = 0; i < userresponse!.body!.length; i++) {
-        print(userresponse!.body![i].ufname);
-      }
-    }
-  }
+  String token;
+  AdminHome({Key? key, required this.token}) : super(key: key);
+  // UserResponse? userresponse;
+  // bool loading = false;
+  // void getAllUsers() async {
+  //   var response = await http.get(
+  //     Uri.parse("http://localhost:8080/userall"),
+  //     headers: {
+  //       "Authorization":
+  //           "Bearer $token"
+  //     },
+  //   );
+  //   print("Status Code");
+  //   print(response.statusCode);
+  //   if (response.statusCode == 200) {
+  //     // print("got in to the function");
+  //     userresponse = userResponseFromJson(response.body);
+  //     for (int i = 0; i < userresponse!.body!.length; i++) {
+  //       print(userresponse!.body![i].ufname);
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +125,11 @@ class AdminHome extends StatelessWidget {
                     height: 50,
                   ),
                   Container(
-                      height: 500, width: 500, child: new ListVewBuilder()),
+                      height: 500,
+                      width: 500,
+                      child: new ListVewBuilder(
+                        token: token,
+                      )),
                   // Padding(
                   //   padding: const EdgeInsets.only(left: 10),
                   // child: Table(
@@ -430,9 +438,27 @@ class PieChart2State extends State {
   }
 }
 
-class ListVewBuilder extends StatefulWidget {
-  const ListVewBuilder({Key? key}) : super(key: key);
+// class Myapp1 extends StatefulWidget {
+//   Myapp1({Key? key}) : super(key: key);
 
+//   @override
+//   State<Myapp1> createState() => _Myapp1State();
+// }
+
+// class _Myapp1State extends State<Myapp1> {
+//   // _Myapp1State() {
+//   //   getAllUsers();
+//   // }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return ListVewBuilder();
+//   }
+// }
+
+class ListVewBuilder extends StatefulWidget {
+  ListVewBuilder({Key? key, this.token}) : super(key: key);
+  String? token;
   @override
   State<ListVewBuilder> createState() => _ListVewBuilderState();
 }
@@ -451,12 +477,10 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
     setState(() {
       _loading = true;
     });
+    // print("$widget");
     var response = await http.get(
       Uri.parse("http://localhost:8080/userall"),
-      headers: {
-        "Authorization":
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTQGdtYWlsLmNvbSIsImV4cCI6MTY1MjQ4MDY4NywiaWF0IjoxNjUyNDQ0Njg3fQ.O_RUSAtrrJSB4nksIdeSLFETzRjY7TyEN2jpoYyYRX8"
-      },
+      headers: {"Authorization": "Bearer ${widget.token}"},
     );
     print("Status Code");
     print(response.statusCode);
@@ -476,19 +500,17 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // appBar: AppBar(
-        //   title: Text("ListView.builder"),
-        // ),
-        body: Container(
-      child: Column(
+      // appBar: AppBar(
+      //   title: Text("ListView.builder"),
+      // ),
+      body: Container(
+          child: Column(
         children: [
           _loading
               ? Container(
-                  height: 200,
-                  width: 200,
                   child: CircularProgressIndicator(
-                    color: Colors.red,
-                  ))
+                  color: Colors.red,
+                ))
               : Container(
                 width: 500,
                 height: 500,
@@ -507,7 +529,18 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                       }),
                 )
         ],
-      ),
-    ));
+      )),
+      // body: ListView.builder(
+      //     itemCount: userresponse!.body!.length,
+      //     itemBuilder: (BuildContext context, int index) {
+      //       return ListTile(
+      //           leading: Icon(Icons.list),
+      //           trailing: Text(
+      //             "GFG",
+      //             style: TextStyle(color: Colors.green, fontSize: 15),
+      //           ),
+      //           title: Text(userresponse!.body![index].ufname.toString()));
+      //     }),
+    );
   }
 }

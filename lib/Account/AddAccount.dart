@@ -178,10 +178,10 @@ class AddAcc extends StatelessWidget {
                         print("Widraw Amount : " + _amount);
                         print("Date/Time : " + _datetime);
                         print("Destination Account Number : " + _DessAccNumber);
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AdminHome()));
+                        // Navigator.pushReplacement(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => AdminHome()));
                       },
                       style: ElevatedButton.styleFrom(
                           primary: Colors.deepPurple,

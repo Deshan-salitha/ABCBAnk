@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:abcbank/AdminDashboard.dart';
 import 'package:abcbank/CustomerDashbord.dart';
+import 'package:abcbank/model/Auth_response.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -34,6 +38,56 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _username = "";
   String _password = "";
+  AuthResponse? authresponse;
+  var body = {};
+  bool _loading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getAuthenticate();
+  }
+
+  void getAuthenticate() async {
+    setState(() {
+      _loading = true;
+    });
+    body["userEmail"] = _username;
+    body["password"] = _password;
+    String bodyJason = json.encode(body);
+    var response = await http.post(
+        Uri.parse("http://localhost:8080/authenticate"),
+        headers: {"Content-Type": "application/json"},
+        body: bodyJason);
+
+    print("Status Code");
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      authresponse = authResponseFromJson(response.body);
+      // setState(() {});
+      // for (int i = 0; i < userresponse!.body!.length; i++) {
+      print(authresponse!.body!.user);
+      print(authresponse!.body!.jwt);
+      print(authresponse!.body!.user!.userType);
+      // }
+      if (authresponse!.body!.user!.userType == 'admin') {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => AdminHome(token: authresponse!.body!.jwt.toString(),)));
+      } else if (authresponse!.body!.user!.userType == 'customer') {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => CustomerHome()));
+      } else if (authresponse!.body!.user!.userType == 'employee') {
+        print('employee dashboard');
+      } else {
+        print('invalid');
+      }
+
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,18 +170,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 labelStyle: const TextStyle(fontSize: 12),
                 contentPadding: const EdgeInsets.only(left: 30),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                      color: Colors.grey),
+                  borderSide: const BorderSide(color: Colors.grey),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                      color: Color.fromARGB(255, 0, 128, 255)),
+                  borderSide:
+                      const BorderSide(color: Color.fromARGB(255, 0, 128, 255)),
                   borderRadius: BorderRadius.circular(15),
                 )),
-                onChanged: (val){
-                  _username = val;
-                },
+            onChanged: (val) {
+              _username = val;
+            },
           ),
         ),
         const SizedBox(
@@ -147,18 +200,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 labelStyle: const TextStyle(fontSize: 12),
                 contentPadding: const EdgeInsets.only(left: 30),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                      color: Colors.grey),
+                  borderSide: const BorderSide(color: Colors.grey),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                      color: Color.fromARGB(255, 0, 128, 255)),
+                  borderSide:
+                      const BorderSide(color: Color.fromARGB(255, 0, 128, 255)),
                   borderRadius: BorderRadius.circular(15),
                 )),
-                onChanged: (val){
-                  _password = val;
-                },
+            onChanged: (val) {
+              _password = val;
+            },
           ),
         ),
         const SizedBox(
@@ -183,17 +235,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Center(child: Text('Sign in')),
             ),
             onPressed: () {
-              print("User Name : "+_username);
-              print("Password : "+_password);
-              if(_username == 'admin'){
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AdminHome()));
-              }else if(_username == 'customer'){
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CustomerHome()));
-              }else if(_username == 'employee'){
-                print('employee dashboard');
-              }else{
-                print('invalid');
-              }
+              print("User Name : " + _username);
+              print("Password : " + _password);
+              getAuthenticate();
             },
             style: ElevatedButton.styleFrom(
                 primary: Colors.deepPurple,
