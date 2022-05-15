@@ -1,28 +1,35 @@
+import 'dart:async';
 import 'package:abcbank/main.dart';
+import 'package:abcbank/model/transactionResponse.dart';
 import 'package:abcbank/model/user_repose.dart';
 import 'package:abcbank/navbar/sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'indicator.dart';
 import 'package:http/http.dart' as http;
 
 class CustomerHome extends StatelessWidget {
-  CustomerHome({Key? key}) : super(key: key);
-  List<UserResponse>? userresponse;
-  void getAllUsers() async {
-    var response =
-        await http.get(Uri.parse("http://localhost:8080/userall"));
+  CustomerHome({Key? key, this.token}) : super(key: key);
+  String? token;
+  List<TransactionResponse>? trresponse;
+  // TransactionResponse trresponse;
+  void getAllTransactions() async {
+    print("Token" + token.toString());
+    var response = await http.get(Uri.parse("http://localhost:8080/alltransactions"), headers: {
+      "Authorization": "Bearer $token",
+    });
     print("Status Code");
-    print(response.statusCode);
-    // if(response.statusCode == 200){
-    //    userresponse = userResponseFromJson(response.body);
-    //    for(int i =0 ; i < userresponse!.length; i++){
-    //      print(userresponse![i].name);
-    //    }
-    // }
+    // print(response.statusCode);
+    print("before if");
+    if (response.statusCode == 200) {
+      print("object");
+      trresponse = transactionResponseFromJson(response.body);
+      for (int i = 0; i < trresponse!.length; i++) {
+        print(trresponse![i].tId);
+      }
+    }
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -78,127 +85,17 @@ class CustomerHome extends StatelessWidget {
                   const SizedBox(
                     height: 50,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Table(
-                      // border: TableBorder.all(),
-                      children: const [
-                        TableRow(children: [
-                          Text(
-                            "TID",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "Amount",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "Date/Time",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "Transaction Type",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "Destination Account Number",
-                            textAlign: TextAlign.center,
-                          ),
-                        ]),
-                        TableRow(children: [
-                          Text(
-                            "1",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "112",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "1999-03-22 10:06:07",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "Deposit",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "None",
-                            textAlign: TextAlign.center,
-                          ),
-                        ]),
-                        TableRow(children: [
-                          Text(
-                            "2",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "112",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "1999-03-22 10:06:07",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "Widthdrow",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "None",
-                            textAlign: TextAlign.center,
-                          ),
-                        ]),
-                        TableRow(children: [
-                          Text(
-                            "3",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "112",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "1999-03-22 10:06:07",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "Deposit",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "None",
-                            textAlign: TextAlign.center,
-                          ),
-                        ]),
-                        TableRow(children: [
-                          Text(
-                            "4",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "112",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "1999-03-22 10:06:07",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "Widthrow",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "None",
-                            textAlign: TextAlign.center,
-                          ),
-                        ]),
-                      ],
-                    ),
+                  Container(
+                    height: 500,
+                    width: 500,
+                    // child: new ListVewBuilderTransaction(
+                    // child: new ListVewBuilder(
+                    //   token: token,
+                    // )
                   ),
                   ElevatedButton(
                       onPressed: () {
-                        getAllUsers();
+                        getAllTransactions();
                       },
                       child: Text("getData")),
                 ]),
@@ -993,3 +890,96 @@ class deposite extends StatelessWidget {
     ));
   }
 }
+
+class ListVewBuilder extends StatefulWidget {
+  ListVewBuilder({Key? key, this.token}) : super(key: key);
+  String? token;
+  @override
+  State<ListVewBuilder> createState() => _ListVewBuilderState();
+}
+
+class _ListVewBuilderState extends State<ListVewBuilder> {
+  List<TransactionResponse>? trresponse;
+  bool _loading = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getAllTransactions();
+  }
+
+  void getAllTransactions() async {
+    setState(() {
+      _loading = true;
+    });
+    // print("$widget");
+    var response = await http.get(
+      Uri.parse("http://localhost:8080/alltransactions"),
+      headers: {"Authorization": "Bearer ${widget.token}"},
+    );
+    print("Status Code");
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      trresponse = transactionResponseFromJson(response.body);
+      setState(() {});
+      for (int i = 0; i < trresponse!.length; i++) {
+        print(trresponse![i].tId);
+      }
+      Timer(Duration(seconds: 3), () {
+        setState(() {
+          _loading = false;
+        });
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // appBar: AppBar(
+      //   title: Text("ListView.builder"),
+      // ),
+      body: Container(
+          child: Column(
+        children: [
+          _loading
+              ? Container(
+                  padding: EdgeInsets.all(200),
+                  child: SpinKitRing(color: Colors.amber),
+                  // child: CircularProgressIndicator(
+                  // color: Colors.red,)
+                )
+              : Container(
+                  width: 500,
+                  height: 500,
+                  child: ListView.builder(
+                      itemCount: trresponse!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                            leading: Icon(Icons.list),
+                            trailing: Text(
+                              "GFG",
+                              style:
+                                  TextStyle(color: Colors.green, fontSize: 15),
+                            ),
+                            title: Text(trresponse![index].tId.toString()));
+                      }),
+                )
+        ],
+      )),
+      // body: ListView.builder(
+      //     itemCount: userresponse!.body!.length,
+      //     itemBuilder: (BuildContext context, int index) {
+      //       return ListTile(
+      //           leading: Icon(Icons.list),
+      //           trailing: Text(
+      //             "GFG",
+      //             style: TextStyle(color: Colors.green, fontSize: 15),
+      //           ),
+      //           title: Text(userresponse!.body![index].ufname.toString()));
+      //     }),
+    );
+  }
+}
+
+// --------------------------userall

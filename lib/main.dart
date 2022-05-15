@@ -67,16 +67,16 @@ class _MyHomePageState extends State<MyHomePage> {
       authresponse = authResponseFromJson(response.body);
       // setState(() {});
       // for (int i = 0; i < userresponse!.body!.length; i++) {
-      print(authresponse!.body!.user);
-      print(authresponse!.body!.jwt);
-      print(authresponse!.body!.user!.userType);
+      // print(authresponse!.body!.user);
+      // print(authresponse!.body!.jwt);
+      // print(authresponse!.body!.user!.userType);
       // }
       if (authresponse!.body!.user!.userType == 'admin') {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => AdminHome(token: authresponse!.body!.jwt.toString(),)));
       } else if (authresponse!.body!.user!.userType == 'customer') {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => CustomerHome()));
+            context, MaterialPageRoute(builder: (context) => CustomerHome(token: authresponse!.body!.jwt.toString(),)));
       } else if (authresponse!.body!.user!.userType == 'employee') {
         print('employee dashboard');
       } else {
@@ -84,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
       setState(() {
+        
         _loading = false;
       });
     }

@@ -1,13 +1,18 @@
+import 'dart:async';
+
 import 'package:abcbank/model/Auth_response.dart';
+import 'package:abcbank/model/transactionResponse.dart';
 import 'package:abcbank/model/user_repose.dart';
 import 'package:abcbank/main.dart';
 import 'package:abcbank/navbar/adminNavbar.dart';
 import 'package:abcbank/test.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'indicator.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class AdminHome extends StatelessWidget {
   String token;
@@ -127,6 +132,7 @@ class AdminHome extends StatelessWidget {
                   Container(
                       height: 500,
                       width: 500,
+                      // child: new ListVewBuilderTransaction(
                       child: new ListVewBuilder(
                         token: token,
                       )),
@@ -490,6 +496,102 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
       for (int i = 0; i < userresponse!.body!.length; i++) {
         print(userresponse!.body![i].ufname);
       }
+    Timer(Duration(seconds: 3), () {
+    setState(() {
+        _loading = false;
+      });
+  });
+      
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // appBar: AppBar(
+      //   title: Text("ListView.builder"),
+      // ),
+      body: Container(
+          child: Column(
+        children: [
+          _loading
+              ? Container(
+                padding: EdgeInsets.all(200),
+                child: SpinKitRing(color: Colors.amber),
+                  // child: CircularProgressIndicator(
+                  // color: Colors.red,)
+                  )
+              : Container(
+                width: 500,
+                height: 500,
+                  child: ListView.builder(
+                      itemCount: userresponse!.body!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                            leading: Icon(Icons.list),
+                            trailing: Text(
+                              "GFG",
+                              style:
+                                  TextStyle(color: Colors.green, fontSize: 15),
+                            ),
+                            title: Text(
+                                userresponse!.body![index].ufname.toString()));
+                      }),
+                )
+        ],
+      )),
+      // body: ListView.builder(
+      //     itemCount: userresponse!.body!.length,
+      //     itemBuilder: (BuildContext context, int index) {
+      //       return ListTile(
+      //           leading: Icon(Icons.list),
+      //           trailing: Text(
+      //             "GFG",
+      //             style: TextStyle(color: Colors.green, fontSize: 15),
+      //           ),
+      //           title: Text(userresponse!.body![index].ufname.toString()));
+      //     }),
+    );
+  }
+}
+
+// --------------------------------------transaction list view------------------------------------------------------------
+class ListVewBuilderTransaction extends StatefulWidget {
+  ListVewBuilderTransaction({Key? key, this.token}) : super(key: key);
+  String? token;
+  @override
+  State<ListVewBuilderTransaction> createState() => _ListVewBuilderTransactionState();
+}
+
+class _ListVewBuilderTransactionState extends State<ListVewBuilderTransaction> {
+  List<TransactionResponse>? transactionresponse;
+  bool _loading = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getAllUsers();
+  }
+
+  void getAllUsers() async {
+    setState(() {
+      _loading = true;
+    });
+    // print("$widget");
+    var response = await http.get(
+      Uri.parse("http://localhost:8080/alltransactions"),
+      headers: {"Authorization": "Bearer ${widget.token}"},
+    );
+    print("Status Code");
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200) {
+      
+      transactionresponse = transactionResponseFromJson(response.body);
+      setState(() {});
+      for (int i = 0; i < transactionresponse!.length; i++) {
+        print(transactionresponse![i].ownerAcc);
+      }
 
       setState(() {
         _loading = false;
@@ -508,14 +610,16 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
         children: [
           _loading
               ? Container(
-                  child: CircularProgressIndicator(
-                  color: Colors.red,
-                ))
+                child: SpinKitCubeGrid(color: Colors.amber,),
+                  // child: CircularProgressIndicator(
+                  // color: Colors.red,)
+                  )
               : Container(
                 width: 500,
                 height: 500,
+                // color: Colors.blue,
                   child: ListView.builder(
-                      itemCount: userresponse!.body!.length,
+                      itemCount: transactionresponse!.length,
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
                             leading: Icon(Icons.list),
@@ -525,7 +629,7 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                                   TextStyle(color: Colors.green, fontSize: 15),
                             ),
                             title: Text(
-                                userresponse!.body![index].ufname.toString()));
+                                transactionresponse![index].ownerAcc.toString()));
                       }),
                 )
         ],
