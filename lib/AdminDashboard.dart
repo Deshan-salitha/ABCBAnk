@@ -496,12 +496,11 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
       for (int i = 0; i < userresponse!.body!.length; i++) {
         print(userresponse!.body![i].ufname);
       }
-    Timer(Duration(seconds: 3), () {
-    setState(() {
-        _loading = false;
+      Timer(Duration(seconds: 3), () {
+        setState(() {
+          _loading = false;
+        });
       });
-  });
-      
     }
   }
 
@@ -516,26 +515,30 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
         children: [
           _loading
               ? Container(
-                padding: EdgeInsets.all(200),
-                child: SpinKitRing(color: Colors.amber),
+                  padding: EdgeInsets.all(200),
+                  child: SpinKitRing(color: Colors.amber),
                   // child: CircularProgressIndicator(
                   // color: Colors.red,)
-                  )
+                )
               : Container(
-                width: 500,
-                height: 500,
+                  width: 500,
+                  height: 500,
                   child: ListView.builder(
                       itemCount: userresponse!.body!.length,
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
-                            leading: Icon(Icons.list),
-                            trailing: Text(
-                              "GFG",
-                              style:
-                                  TextStyle(color: Colors.green, fontSize: 15),
-                            ),
+                            leading: Icon(Icons.person),
+                            trailing: Container(
+                                child: Column(
+                              children: [
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Icon(Icons.visibility,color: Colors.black87,)
+                                )
+                              ],
+                            )),
                             title: Text(
-                                userresponse!.body![index].ufname.toString()));
+                                userresponse!.body![index].ufname.toString() +" "+ userresponse!.body![index].ulname.toString()));
                       }),
                 )
         ],
@@ -560,7 +563,8 @@ class ListVewBuilderTransaction extends StatefulWidget {
   ListVewBuilderTransaction({Key? key, this.token}) : super(key: key);
   String? token;
   @override
-  State<ListVewBuilderTransaction> createState() => _ListVewBuilderTransactionState();
+  State<ListVewBuilderTransaction> createState() =>
+      _ListVewBuilderTransactionState();
 }
 
 class _ListVewBuilderTransactionState extends State<ListVewBuilderTransaction> {
@@ -586,7 +590,6 @@ class _ListVewBuilderTransactionState extends State<ListVewBuilderTransaction> {
     print(response.statusCode);
     print(response.body);
     if (response.statusCode == 200) {
-      
       transactionresponse = transactionResponseFromJson(response.body);
       setState(() {});
       for (int i = 0; i < transactionresponse!.length; i++) {
@@ -610,26 +613,35 @@ class _ListVewBuilderTransactionState extends State<ListVewBuilderTransaction> {
         children: [
           _loading
               ? Container(
-                child: SpinKitCubeGrid(color: Colors.amber,),
+                  child: SpinKitCubeGrid(
+                    color: Colors.amber,
+                  ),
                   // child: CircularProgressIndicator(
                   // color: Colors.red,)
-                  )
+                )
               : Container(
-                width: 500,
-                height: 500,
-                // color: Colors.blue,
+                  width: 500,
+                  height: 500,
+                  // color: Colors.blue,
                   child: ListView.builder(
                       itemCount: transactionresponse!.length,
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
-                            leading: Icon(Icons.list),
-                            trailing: Text(
-                              "GFG",
-                              style:
-                                  TextStyle(color: Colors.green, fontSize: 15),
-                            ),
-                            title: Text(
-                                transactionresponse![index].ownerAcc.toString()));
+                            leading: Icon(Icons.person),
+                            trailing: Container(
+                                child: Column(
+                              children: [
+                                TextButton(
+                                    onPressed: () {},
+                                    child: Icon(
+                                      Icons.person,
+                                      color: Colors.black87,
+                                    ))
+                              ],
+                            )),
+                            title: Text(transactionresponse![index]
+                                .ownerAcc
+                                .toString()));
                       }),
                 )
         ],

@@ -16,8 +16,10 @@ class CustomerHome extends StatelessWidget {
   // TransactionResponse trresponse;
   void getAllTransactions() async {
     print("Token" + token.toString());
-    var response = await http.get(Uri.parse("http://localhost:8080/alltransactions"), headers: {
+    var response = await http
+        .get(Uri.parse("http://localhost:8080/alltransactions"), headers: {
       "Authorization": "Bearer $token",
+      "Access-Control-Allow-Origin": "*"
     });
     print("Status Code");
     // print(response.statusCode);
@@ -86,13 +88,12 @@ class CustomerHome extends StatelessWidget {
                     height: 50,
                   ),
                   Container(
-                    height: 500,
-                    width: 500,
-                    // child: new ListVewBuilderTransaction(
-                    // child: new ListVewBuilder(
-                    //   token: token,
-                    // )
-                  ),
+                      height: 500,
+                      width: 500,
+                      // child: new ListVewBuilderTransaction(
+                      child: new ListVewBuilder(
+                        token: token,
+                      )),
                   ElevatedButton(
                       onPressed: () {
                         getAllTransactions();
@@ -915,7 +916,11 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
     // print("$widget");
     var response = await http.get(
       Uri.parse("http://localhost:8080/alltransactions"),
-      headers: {"Authorization": "Bearer ${widget.token}"},
+      headers: {
+        "Authorization": "Bearer ${widget.token}",
+        "Authorization": "Bearer ${widget.token}",
+        "Access-Control-Allow-Origin": "*"
+      },
     );
     print("Status Code");
     print(response.statusCode);
@@ -957,12 +962,16 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
                             leading: Icon(Icons.list),
-                            trailing: Text(
-                              "GFG",
-                              style:
-                                  TextStyle(color: Colors.green, fontSize: 15),
-                            ),
-                            title: Text(trresponse![index].tId.toString()));
+                            trailing: Container(
+                                child: Column(
+                              children: [
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Icon(Icons.person,color: Colors.black87,)
+                                )
+                              ],
+                            )),
+                            title: Text(trresponse![index].ownerAcc!.owner!.email.toString()));
                       }),
                 )
         ],
