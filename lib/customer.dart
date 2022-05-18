@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:html';
 import 'package:abcbank/main.dart';
+import 'package:abcbank/model/SingleUserResponse.dart';
 import 'package:abcbank/model/transactionResponse.dart';
 import 'package:abcbank/model/user_repose.dart';
 import 'package:abcbank/navbar/sidebar.dart';
@@ -1076,11 +1077,13 @@ class ListVewBuilder extends StatefulWidget {
 }
 
 class _ListVewBuilderState extends State<ListVewBuilder> {
-  List<TransactionResponse>? trresponse;
+  SingleuserResponse? trresponse;
   bool _loading = false;
-  List<TransactionResponse>? widthdrowList = [];
-  List<TransactionResponse>? depositList = [];
-  List<TransactionResponse>? transactionList = [];
+  List<SingleuserResponse>? widthdrowList = [];
+  List<SingleuserResponse>? depositList = [];
+  List<SingleuserResponse>? transactionList = [];
+  List<SingleuserResponse>? all = [];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -1094,40 +1097,73 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
     });
 
     // print("$widget");
-    var response = await http.get(
-      Uri.parse("http://localhost:8080/alltransactions"),
+    var response = await http.post(
+      Uri.parse("http://localhost:8080/usebyid/6"),
       headers: {
         "Authorization": "Bearer ${widget.token}",
         // "Authorization": "Bearer ${widget.token}",
         "Access-Control-Allow-Origin": "*"
       },
     );
+    // print("deposite :");
+    //   print(depositList!);
+    //   print("Widthrow :");
+    //   print(widthdrowList!);
+    //   print("transaction :");
+    //   print(transactionList!);
+    //   print("all :");
+    //   print(all!);
     print("Status Code");
     print(response.statusCode);
     if (response.statusCode == 200) {
-      trresponse = transactionResponseFromJson(response.body);
+      trresponse = singleuserResponseFromJson(response.body);
       setState(() {});
-      for (int i = 0; i < trresponse!.length; i++) {
-        if (trresponse![i].type.toString() == "Type.D") {
-          // print(trresponse![i]);
-          depositList?.add(trresponse![i]);
+      print(trresponse!.accounts![0].transactins!.length);
+      print(trresponse!.accounts!.length);
+      for (int i= 0; i < trresponse!.accounts!.length; i++){
+        print("Inside the account");
+        for(int j = 0; j < trresponse!.accounts![i].transactins!.length; j++){
+          // print("inside the transaction");
+          // print(trresponse!.accounts![i].transactins![j].type.toString());
+          if(trresponse!.accounts![i].transactins![j].type.toString() == "d"){
+            depositList?.add(trresponse!);
+          }else
+          if (trresponse!.accounts![i].transactins![j].type.toString() == "w") {
+          // print(trresponse!);
+          widthdrowList?.add(trresponse!);
+        }else
+        if (trresponse!.accounts![i].transactins![j].type.toString() == "t") {
+          // print(trresponse!.accounts![i].transactins![j].type.toString());
+          transactionList?.add(trresponse!);
+          // print(transactionList![0].accounts![0].transactins![0].type);
         }
-        if (trresponse![i].type.toString() == "Type.W") {
-          // print(trresponse![i]);
-          widthdrowList?.add(trresponse![i]);
-        }
-        if (trresponse![i].type.toString() == "Type.T") {
-          // print(trresponse![i]);
-          transactionList?.add(trresponse![i]);
+          all?.add(trresponse!);
         }
       }
+      // for (int i = 0; i <= trresponse!.accounts!.length; i++) {
+      //   print(trresponse!.accounts![0].transactins![0].type);
+      //   if (trresponse!.accounts![i].transactins![i].type.toString() == "Type.D") {
+      //     // print(trresponse![i]);
+      //     depositList?.add(trresponse!);
+      //   }
+        // if (trresponse!.accounts![i].transactins![i].type.toString() == "Type.W") {
+        //   // print(trresponse![i]);
+        //   widthdrowList?.add(trresponse!);
+        // }
+        // if (trresponse!.accounts![i].transactins![i].type.toString() == "Type.T") {
+        //   // print(trresponse![i]);
+        //   transactionList?.add(trresponse!);
+        // }
+      // }
       // print("deposite :");
-      // print(depositList);
+      // print(depositList![0].accounts![0].transactins![0].type);
       // print("Widthrow :");
-      // print(widthdrowList);
+      // print(widthdrowList![0].accounts![0].transactins![0].type);
       // print("transaction :");
-      // print(transactionList);
-      Timer(const Duration(seconds: 3), () {
+      // print(transactionList![0].accounts![0].transactins![0].type);
+      // print("all :");
+      // print(all!);
+      Timer(const Duration(seconds: 1), () {
         setState(() {
           _loading = false;
         });
@@ -1186,24 +1222,18 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                               children: [
                                 Expanded(
                                   flex: 1,
-                                  child: Text(depositList![index]
-                                      .accNumber
-                                      .toString()),
+                                  child: Text(depositList![index].accounts![index].transactins![index].accNumber.toString()),
                                 ),
                                 Expanded(
                                   flex: 1,
-                                  child: Text(
-                                    depositList![index].amount.toString(),
-                                    style: TextStyle(
-                                        color: Colors.green, fontSize: 25
-                                        ),
-                                    textAlign: TextAlign.right,
-                                  ),
+                                  child: Text(depositList![index].accounts![index].transactins![index].amount.toString()),
                                 )
                               ],
-                            ),
+                            )
+                            ,
                             subtitle: Text("Date/Time: " +
-                                depositList![index].dateTime.toString()));
+                                depositList![index].accounts![index].transactins![index].dateTime.toString())
+                            );
                         });
                   } else if (widget.isWidthrow == true) {
                     return ListView.builder(
@@ -1227,14 +1257,12 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                               children: [
                                 Expanded(
                                   flex: 1,
-                                  child: Text(widthdrowList![index]
-                                      .accNumber
-                                      .toString()),
+                                  child: Text(widthdrowList![index].accounts![index].transactins![index].accNumber.toString()),
                                 ),
                                 Expanded(
                                   flex: 1,
                                   child: Text(
-                                    widthdrowList![index].amount.toString(),
+                                    widthdrowList![index].accounts![index].transactins![index].amount.toString(),
                                     style: TextStyle(
                                         color: Colors.red, fontSize: 25
                                         ),
@@ -1244,7 +1272,7 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                               ],
                             ),
                             subtitle: Text("Date/Time: " +
-                                widthdrowList![index].dateTime.toString()));
+                                widthdrowList![index].accounts![index].transactins![index].dateTime.toString()));
                         });
                   } else if (widget.isTransaction == true) {
                     return ListView.builder(
@@ -1268,14 +1296,12 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                               children: [
                                 Expanded(
                                   flex: 1,
-                                  child: Text(transactionList![index]
-                                      .accNumber
-                                      .toString()),
+                                  child: Text(transactionList![index].accounts![index].transactins![index].destinationAccId.toString()),
                                 ),
                                 Expanded(
                                   flex: 1,
                                   child: Text(
-                                    transactionList![index].amount.toString(),
+                                    transactionList![index].accounts![index].transactins![index].amount.toString(),
                                     style: TextStyle(
                                         color: Colors.red, fontSize: 25),
                                     textAlign: TextAlign.right,
@@ -1284,51 +1310,47 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                               ],
                             ),
                             subtitle: Text("Date/Time: " +
-                                transactionList![index].dateTime.toString()),
+                                transactionList![index].accounts![index].transactins![index].dateTime.toString()),
                           );
                         });
                   } else if (widget.isAll) {
                     return ListView.builder(
-                        itemCount: trresponse!.length,
+                        itemCount: all!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return ListTile(
-                              leading: const Icon(Icons.list),
-                              trailing: Container(
-                                  child: Column(
-                                children: [
-                                  // Text(trresponse![index].accNumber.toString()),
-                                  TextButton(
-                                      onPressed: () {},
-                                      child: const Icon(
-                                        Icons.person,
-                                        color: Colors.black87,
-                                      )),
-                                ],
-                              )),
-                              title: Row(
+                            leading: const Icon(Icons.list),
+                            trailing: Container(
+                                child: Column(
+                              children: [
+                                // Row(children: [Text(trresponse![index].accNumber.toString()), ],),
+                                TextButton(
+                                    onPressed: () {},
+                                    child: const Icon(
+                                      Icons.person,
+                                      color: Colors.black87,
+                                    )),
+                              ],
+                            )),
+                            title: Row(
                               children: [
                                 Expanded(
                                   flex: 1,
-                                  child: Text(trresponse![index]
-                                      .accNumber
-                                      .toString()),
+                                  child: Text(all![index].accounts![0].transactins![index].accNumber.toString()),
                                 ),
                                 Expanded(
                                   flex: 1,
                                   child: Text(
-                                    trresponse![index].amount.toString(),
+                                    all![index].accounts![0].transactins![index].amount.toString(),
                                     style: TextStyle(
-                                        // color: Colors.red, 
-                                        fontSize: 25
-                                        ),
+                                        color: Colors.red, fontSize: 25),
                                     textAlign: TextAlign.right,
                                   ),
                                 )
                               ],
                             ),
                             subtitle: Text("Date/Time: " +
-                                trresponse![index].dateTime.toString())
-                                      );
+                                all![index].accounts![0].transactins![index].dateTime.toString()),
+                          );
                         });
                   }
                 }()))
