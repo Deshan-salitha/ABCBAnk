@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:abcbank/AdminDashboard.dart';
 import 'package:abcbank/CustomerDashbord.dart';
+import 'package:abcbank/customer.dart';
 import 'package:abcbank/model/Auth_response.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -76,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
             context, MaterialPageRoute(builder: (context) => AdminHome(token: authresponse!.body!.jwt.toString(),)));
       } else if (authresponse!.body!.user!.userType == 'customer') {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => CustomerHome(token: authresponse!.body!.jwt.toString(),)));
+            context, MaterialPageRoute(builder: (context) => customer(token: authresponse!.body!.jwt.toString(),)));
       } else if (authresponse!.body!.user!.userType == 'employee') {
         print('employee dashboard');
       } else {

@@ -129,6 +129,44 @@ class AdminHome extends StatelessWidget {
                   const SizedBox(
                     height: 50,
                   ),
+                  Row(children: [
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding:  EdgeInsets.only(bottom: 10),
+                          width: 10,
+                          child: TextButton(
+                            // color: Colors.red, // background
+                            // textColor: Colors.white, // foreground
+                            onPressed: () {},
+                            child: Text('All'),
+                          ),
+                        )),
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding:  EdgeInsets.only(bottom: 10),
+                          width: 10,
+                          child: TextButton(
+                            // color: Colors.red, // background
+                            // textColor: Colors.white, // foreground
+                            onPressed: () {},
+                            child: Text('Customers'),
+                          ),
+                        )),
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding:  EdgeInsets.only(bottom: 10),
+                          width: 10,
+                          child: TextButton(
+                            // color: Colors.red, // background
+                            // textColor: Colors.white, // foreground
+                            onPressed: () {},
+                            child: Text('Employees'),
+                          ),
+                        )),
+                  ]),
                   Container(
                       height: 500,
                       width: 500,
@@ -254,13 +292,13 @@ class AdminHome extends StatelessWidget {
                   //   ],
                   // ),
                   // ),
-                  ElevatedButton(
-                      onPressed: () {
-                        // getAllUsers();
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) => Myapp1()));
-                      },
-                      child: Text("getData")),
+                  // ElevatedButton(
+                  //     onPressed: () {
+                  //       // getAllUsers();
+                  //       Navigator.pushReplacement(context,
+                  //           MaterialPageRoute(builder: (context) => Myapp1()));
+                  //     },
+                  //     child: Text("getData")),
                 ]),
               )),
           Expanded(
@@ -538,7 +576,7 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                               ],
                             )),
                             title: Text(
-                                userresponse!.body![index].ufname.toString() +" "+ userresponse!.body![index].ulname.toString()));
+                                userresponse!.body![index].ufname.toString() +" "+ userresponse!.body![index].ulname.toString()),);
                       }),
                 )
         ],
