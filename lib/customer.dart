@@ -520,13 +520,13 @@ class Transaction extends StatelessWidget {
     print("Status Code");
     print(response.statusCode);
     if (response.statusCode == 200) {
-      BuildContext? context;
-      Navigator.pushReplacement(
-          context!,
-          MaterialPageRoute(
-              builder: (context) => customer(
-                    token: token,
-                  )));
+      // BuildContext context;
+      // Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) => customer(
+      //               token: token,
+      //             )));
       // Navigator.of(context).pushNamed("/SecondPage");
       Fluttertoast.showToast(
         msg: "Successfully Transfers",
@@ -536,7 +536,8 @@ class Transaction extends StatelessWidget {
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
-    }else{Fluttertoast.showToast(
+    }
+    else{Fluttertoast.showToast(
         msg: "Something Gone Wrong",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
@@ -729,6 +730,44 @@ class Transaction extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10))),
                     ),
+                  ),SizedBox(height: 20,),
+                  Container(
+                    width: 500,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color.fromARGB(255, 209, 196, 233),
+                            spreadRadius: 10,
+                            blurRadius: 20,
+                          )
+                        ]),
+                    child: ElevatedButton(
+                      child: Container(
+                        width: 500,
+                        height: 50,
+                        child: const Center(child: Text('Cancel')),
+                      ),
+                      onPressed: () {
+                        // // print(_accNumber)
+                        // print("Account Number : " + _accNumber);
+                        // print("Widraw Amount : " + _amount);
+                        // print("Date/Time : " + _datetime);
+                        // print("Destination Account Number : " + _DessAccNumber);
+                        // transaction();
+
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => customer(token: token,)));
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.grey,
+                          onPrimary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                    ),
                   )
                 ],
               ),
@@ -739,16 +778,90 @@ class Transaction extends StatelessWidget {
 }
 
 class Widthdraw extends StatelessWidget {
-  Widthdraw({Key? key,required this.token}) : super(key: key);
+  // Widthdraw({Key? key,required this.token}) : super(key: key);
+  Widthdraw({Key? key, required this.token}) : super(key: key);
   String token;
+  String _accNumber = '';
+  String _amount = '';
+  String _datetime = '';
+  // String _dateTime = '';
+  String _DessAccNumber = '0';
+  // AuthResponse? authresponse;
+  var body = {};
+  bool _loading = false;
+
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   getAuthenticate();
+  // }
+
+  void widthdraw() async {
+    // setState(() {
+    //   _loading = true;
+    // });
+    body["accNumber"] = _accNumber;
+    body["amount"] = _amount;
+    body["date_Time"] = _datetime;
+    body["type"] = "w";
+    body["destinationAccID"] = 0;
+    print("A"+_accNumber);
+    print("a"+_amount);
+    print("d"+_datetime);
+    print("d"+_DessAccNumber);
+    print(token);
+    // print(DateFormat.yMMMd().format(DateTime.now()));
+
+    String bodyJason = json.encode(body);
+    var response =
+        await http.post(Uri.parse("http://localhost:8080/deposite"),
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer $token",
+              // "Authorization": "Bearer ${widget.token}",
+              "Access-Control-Allow-Origin": "*"
+            },
+            body: bodyJason);
+
+    print("Status Code");
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      // BuildContext context;
+      // Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) => customer(
+      //               token: token,
+      //             )));
+      // Navigator.of(context).pushNamed("/SecondPage");
+      Fluttertoast.showToast(
+        msg: "Successfully",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    }
+    else{Fluttertoast.showToast(
+        msg: "Something Gone Wrong",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);}
+    
+  }
 
   @override
   Widget build(BuildContext context) {
-    String _accNumber = '';
-    String _amount = '';
-    String _datetime = '';
-    // final String _dateTime;
-    String _DessAccNumber = '';
+    // String _accNumber = '';
+    // String _amount = '';
+    // String _datetime = '';
+    // // final String _dateTime;
+    // String _DessAccNumber = "0";
     return Scaffold(
         body: Row(
       children: [
@@ -916,13 +1029,53 @@ class Widthdraw extends StatelessWidget {
                         print("Widraw Amount : " + _amount);
                         print("Date/Time : " + _datetime);
                         print("Destination Account Number : " + _DessAccNumber);
+                        widthdraw();
+                        // Navigator.pushReplacement(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => customer(token: token,)));
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.deepPurple,
+                          onPrimary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                    ),
+                  ),
+                  SizedBox(height: 20,),
+                  Container(
+                    width: 500,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color.fromARGB(255, 209, 196, 233),
+                            spreadRadius: 10,
+                            blurRadius: 20,
+                          )
+                        ]),
+                    child: ElevatedButton(
+                      child: Container(
+                        width: 500,
+                        height: 50,
+                        child: const Center(child: Text('Cancel')),
+                      ),
+                      onPressed: () {
+                        // // print(_accNumber)
+                        // print("Account Number : " + _accNumber);
+                        // print("Widraw Amount : " + _amount);
+                        // print("Date/Time : " + _datetime);
+                        // print("Destination Account Number : " + _DessAccNumber);
+                        // transaction();
+
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => customer(token: token,)));
                       },
                       style: ElevatedButton.styleFrom(
-                          primary: Colors.deepPurple,
+                          primary: Colors.grey,
                           onPrimary: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10))),
@@ -937,16 +1090,90 @@ class Widthdraw extends StatelessWidget {
 }
 
 class deposite extends StatelessWidget {
-  deposite({Key? key,required this.token}) : super(key: key);
+  // deposite({Key? key,required this.token}) : super(key: key);
+  deposite({Key? key, required this.token}) : super(key: key);
   String token;
+  String _accNumber = '';
+  String _amount = '';
+  String _datetime = '';
+  // String _dateTime = '';
+  String _DessAccNumber = '0';
+  // AuthResponse? authresponse;
+  var body = {};
+  bool _loading = false;
+
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   getAuthenticate();
+  // }
+
+  void deposite1() async {
+    // setState(() {
+    //   _loading = true;
+    // });
+    body["accNumber"] = _accNumber;
+    body["amount"] = _amount;
+    body["date_Time"] = _datetime;
+    body["type"] = "d";
+    body["destinationAccID"] = 0;
+    print("A"+_accNumber);
+    print("a"+_amount);
+    print("d"+_datetime);
+    print("d"+_DessAccNumber);
+    print(token);
+    // print(DateFormat.yMMMd().format(DateTime.now()));
+
+    String bodyJason = json.encode(body);
+    var response =
+        await http.post(Uri.parse("http://localhost:8080/deposite"),
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer $token",
+              // "Authorization": "Bearer ${widget.token}",
+              "Access-Control-Allow-Origin": "*"
+            },
+            body: bodyJason);
+
+    print("Status Code");
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      // BuildContext context;
+      // Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) => customer(
+      //               token: token,
+      //             )));
+      // Navigator.of(context).pushNamed("/SecondPage");
+      Fluttertoast.showToast(
+        msg: "Successfully",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    }
+    else{Fluttertoast.showToast(
+        msg: "Something Gone Wrong",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);}
+    
+  }
 
   @override
   Widget build(BuildContext context) {
-    String _accNumber = '';
-    String _amount = '';
-    String _datetime = '';
-    // final String _dateTime;
-    String _DessAccNumber = '';
+    // String _accNumber = '';
+    // String _amount = '';
+    // String _datetime = '';
+    // // final String _dateTime;
+    // String _DessAccNumber = '';
     return Scaffold(
         body: Row(
       children: [
@@ -1106,7 +1333,7 @@ class deposite extends StatelessWidget {
                       child: Container(
                         width: 500,
                         height: 50,
-                        child: const Center(child: Text('Widthdraw')),
+                        child: const Center(child: Text('Deposite')),
                       ),
                       onPressed: () {
                         // print(_accNumber)
@@ -1114,6 +1341,7 @@ class deposite extends StatelessWidget {
                         print("deposite Amount : " + _amount);
                         print("Date/Time : " + _datetime);
                         // print("Destination Account Number : "+_DessAccNumber);
+                        deposite1();
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -1121,6 +1349,45 @@ class deposite extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                           primary: Colors.deepPurple,
+                          onPrimary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                    ),
+                  ),
+                  SizedBox(height: 20,),
+                  Container(
+                    width: 500,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color.fromARGB(255, 209, 196, 233),
+                            spreadRadius: 10,
+                            blurRadius: 20,
+                          )
+                        ]),
+                    child: ElevatedButton(
+                      child: Container(
+                        width: 500,
+                        height: 50,
+                        child: const Center(child: Text('Cancel')),
+                      ),
+                      onPressed: () {
+                        // // print(_accNumber)
+                        // print("Account Number : " + _accNumber);
+                        // print("Widraw Amount : " + _amount);
+                        // print("Date/Time : " + _datetime);
+                        // print("Destination Account Number : " + _DessAccNumber);
+                        // transaction();
+
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => customer(token: token,)));
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.grey,
                           onPrimary: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10))),
