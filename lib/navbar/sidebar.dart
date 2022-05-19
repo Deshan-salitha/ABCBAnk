@@ -1,11 +1,14 @@
 import 'package:abcbank/Profile.dart';
 import 'package:abcbank/customer.dart';
+import 'package:abcbank/pdf.dart';
 import 'package:flutter/material.dart';
 import 'package:abcbank/main.dart';
 import 'package:abcbank/CustomerDashbord.dart';
+import 'dart:html' as html;
 
 class Sidebar extends StatefulWidget {
-  Sidebar({ Key? key, required this.token }) : super(key: key);
+  Sidebar({ Key? key, required this.token, this.userID }) : super(key: key);
+  String? userID;
   String token;
 
   @override
@@ -13,6 +16,8 @@ class Sidebar extends StatefulWidget {
 }
 
 class _SidebarState extends State<Sidebar> {
+  
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -95,6 +100,26 @@ class _SidebarState extends State<Sidebar> {
                   // _menuItem(title: 'Transaction')
                 ],
               ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.book,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  TextButton(onPressed: (){
+                    Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => pdf(token: widget.token,)));
+                    // generatePdf("3");
+                  }, child: _menuItem(title: 'Report'))
+                  // _menuItem(title: 'Transaction')
+                ],
+              ),
             ],
           ),
            SizedBox(
@@ -113,6 +138,17 @@ class _SidebarState extends State<Sidebar> {
                       size: 50,
                     ),
                   ),
+                  // SizedBox(
+                  //   width: 20,
+                  // ),
+                  // Container(
+                  //   child: TextButton(onPressed: (){
+                  //   Navigator.pushReplacement(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) => profile(token: widget.token,userID: widget.userID.toString())));
+                  // }, child: _menuItem(title: 'Report')),
+                  // ),
                   SizedBox(
                     width: 20,
                   ),
@@ -121,7 +157,7 @@ class _SidebarState extends State<Sidebar> {
                     Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => profile(token: widget.token,)));
+                              builder: (context) => profile(token: widget.token,userID: widget.userID.toString())));
                   }, child: _menuItem(title: 'Deshan Salitha')),
                   ),
                 ],

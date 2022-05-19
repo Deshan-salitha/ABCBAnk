@@ -7,6 +7,8 @@ import 'package:abcbank/model/Auth_response.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -73,11 +75,13 @@ class _MyHomePageState extends State<MyHomePage> {
       // print(authresponse!.body!.jwt);
       // print(authresponse!.body!.user!.userType);
       // }
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // prefs.setString("userID", authresponse!.body!.user!.uid.toString());
       if (authresponse!.body!.user!.userType == 'admin') {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => AdminHome(
+                builder: (context) => AdminHome(userID: authresponse!.body!.user!.uid.toString(),
                       token: authresponse!.body!.jwt.toString(),
                     )));
       } else if (authresponse!.body!.user!.userType == 'customer') {
@@ -86,6 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
             MaterialPageRoute(
                 builder: (context) => customer(
                       token: authresponse!.body!.jwt.toString(),
+                      userID: authresponse!.body!.user!.uid.toString(),
                     )));
       } else if (authresponse!.body!.user!.userType == 'employee') {
         print('employee dashboard');

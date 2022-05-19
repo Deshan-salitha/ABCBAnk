@@ -17,7 +17,8 @@ import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:path/path.dart';
 
 class customer extends StatefulWidget {
-  customer({Key? key, required this.token}) : super(key: key);
+  customer({Key? key, required this.token,required this.userID}) : super(key: key);
+  String userID;
   String token;
   bool _isAll = true;
   bool _isWidthrow = false;
@@ -49,7 +50,7 @@ class _customerState extends State<customer> {
                         style: TextStyle(color: Colors.white, fontSize: 30),
                       ),
                     ),
-                    Sidebar(token: widget.token),
+                    Sidebar(token: widget.token,userID: widget.userID),
                   ],
                 ),
               )),
@@ -472,7 +473,8 @@ class PieChart2State extends State {
 }
 
 class Transaction extends StatelessWidget {
-  Transaction({Key? key, required this.token}) : super(key: key);
+  Transaction({Key? key, required this.token,this.userID}) : super(key: key);
+  String? userID;
   String token;
   String _accNumber = '';
   String _amount = '';
@@ -760,7 +762,7 @@ class Transaction extends StatelessWidget {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => customer(token: token,)));
+                                builder: (context) => customer(token: token,userID: userID.toString(),)));
                       },
                       style: ElevatedButton.styleFrom(
                           primary: Colors.grey,
@@ -779,7 +781,8 @@ class Transaction extends StatelessWidget {
 
 class Widthdraw extends StatelessWidget {
   // Widthdraw({Key? key,required this.token}) : super(key: key);
-  Widthdraw({Key? key, required this.token}) : super(key: key);
+  Widthdraw({Key? key, required this.token, this.userID}) : super(key: key);
+  String? userID;
   String token;
   String _accNumber = '';
   String _amount = '';
@@ -1072,7 +1075,7 @@ class Widthdraw extends StatelessWidget {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => customer(token: token,)));
+                                builder: (context) => customer(token: token,userID: userID.toString(),)));
                       },
                       style: ElevatedButton.styleFrom(
                           primary: Colors.grey,
@@ -1091,7 +1094,8 @@ class Widthdraw extends StatelessWidget {
 
 class deposite extends StatelessWidget {
   // deposite({Key? key,required this.token}) : super(key: key);
-  deposite({Key? key, required this.token}) : super(key: key);
+  deposite({Key? key, required this.token,this.userID}) : super(key: key);
+  String? userID;
   String token;
   String _accNumber = '';
   String _amount = '';
@@ -1345,7 +1349,7 @@ class deposite extends StatelessWidget {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => customer(token: token,)));
+                                builder: (context) => customer(token: token,userID: userID.toString(),)));
                       },
                       style: ElevatedButton.styleFrom(
                           primary: Colors.deepPurple,
@@ -1384,7 +1388,7 @@ class deposite extends StatelessWidget {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => customer(token: token,)));
+                                builder: (context) => customer(token: token,userID: userID.toString(),)));
                       },
                       style: ElevatedButton.styleFrom(
                           primary: Colors.grey,
@@ -1598,12 +1602,12 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                                   child: Column(
                                 children: [
                                   // Text(trresponse![index].accNumber.toString()),
-                                  TextButton(
-                                      onPressed: () {},
-                                      child: const Icon(
-                                        Icons.person,
-                                        color: Colors.black87,
-                                      )),
+                                  // TextButton(
+                                  //     onPressed: () {},
+                                  //     child: const Icon(
+                                  //       Icons.person,
+                                  //       color: Colors.black87,
+                                  //     )),
                                 ],
                               )),
                               title: Row(
@@ -1648,12 +1652,12 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                                 child: Column(
                               children: [
                                 // Row(children: [Text(trresponse![index].accNumber.toString()), ],),
-                                TextButton(
-                                    onPressed: () {},
-                                    child: const Icon(
-                                      Icons.person,
-                                      color: Colors.black87,
-                                    )),
+                                // TextButton(
+                                //     onPressed: () {},
+                                //     child: const Icon(
+                                //       Icons.person,
+                                //       color: Colors.black87,
+                                //     )),
                               ],
                             )),
                             title: Row(
@@ -1699,12 +1703,12 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                                 child: Column(
                               children: [
                                 // Row(children: [Text(trresponse![index].accNumber.toString()), ],),
-                                TextButton(
-                                    onPressed: () {},
-                                    child: const Icon(
-                                      Icons.person,
-                                      color: Colors.black87,
-                                    )),
+                                // TextButton(
+                                //     onPressed: () {},
+                                    // child: const Icon(
+                                    //   Icons.person,
+                                    //   color: Colors.black87,
+                                    // )),
                               ],
                             )),
                             title: Row(

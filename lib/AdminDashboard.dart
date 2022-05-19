@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:abcbank/Profile.dart';
 import 'package:abcbank/model/Auth_response.dart';
 import 'package:abcbank/model/transactionResponse.dart';
 import 'package:abcbank/model/user_repose.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'indicator.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -17,7 +19,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class AdminHome extends StatelessWidget {
   String token;
-  AdminHome({Key? key, required this.token}) : super(key: key);
+  AdminHome({Key? key, required this.token,required this.userID}) : super(key: key);
+  String userID;
   // UserResponse? userresponse;
   // bool loading = false;
   // void getAllUsers() async {
@@ -38,9 +41,14 @@ class AdminHome extends StatelessWidget {
   //     }
   //   }
   // }
+  // String getUserId() async{
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   return prefs.getString("userID");
+  // }
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       body: Row(
         children: [
@@ -51,7 +59,7 @@ class AdminHome extends StatelessWidget {
                 child: Column(
                   // mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
+                  children: [ 
                     Container(
                       padding: const EdgeInsets.all(50),
                       child: const Text(
@@ -66,7 +74,7 @@ class AdminHome extends StatelessWidget {
                         style: TextStyle(color: Colors.white, fontSize: 30),
                       ),
                     ),
-                    AdminSidebar(token: token),
+                    AdminSidebar(token: token,userID: userID.toString(),),
                   ],
                 ),
               )),
@@ -174,6 +182,7 @@ class AdminHome extends StatelessWidget {
                       // child: new ListVewBuilderTransaction(
                       child: new ListVewBuilder(
                         token: token,
+                        userID: userID,
                       )),
                   // Padding(
                   //   padding: const EdgeInsets.only(left: 10),
@@ -502,8 +511,9 @@ class PieChart2State extends State {
 // }
 
 class ListVewBuilder extends StatefulWidget {
-  ListVewBuilder({Key? key, this.token}) : super(key: key);
-  String? token;
+  ListVewBuilder({Key? key,required this.token,required this.userID}) : super(key: key);
+  String userID;
+  String token;
   @override
   State<ListVewBuilder> createState() => _ListVewBuilderState();
 }
@@ -571,7 +581,12 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                                 child: Column(
                               children: [
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => profile(token: widget.token,userID: widget.userID.toString())));
+                                  },
                                   child: Icon(Icons.visibility,color: Colors.black87,)
                                 )
                               ],
@@ -699,3 +714,4 @@ class _ListVewBuilderTransactionState extends State<ListVewBuilderTransaction> {
     );
   }
 }
+

@@ -1,12 +1,14 @@
 import 'package:abcbank/Account/AddAccount.dart';
 import 'package:abcbank/Profile.dart';
 import 'package:abcbank/customer.dart';
+import 'package:abcbank/pdf.dart';
 import 'package:flutter/material.dart';
 import 'package:abcbank/main.dart';
 import 'package:abcbank/CustomerDashbord.dart';
 
 class AdminSidebar extends StatefulWidget {
-  AdminSidebar({ Key? key ,required this.token}) : super(key: key);
+  AdminSidebar({ Key? key ,required this.token,required this.userID}) : super(key: key);
+  String userID;
   String token;
 
   @override
@@ -285,6 +287,26 @@ class _AdminSidebarState extends State<AdminSidebar> {
                     },
                     child: _submenuItem(title: 'Account')),
               ]),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.book,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  TextButton(onPressed: (){
+                    Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => pdf(token: widget.token,)));
+                    // generatePdf("3");
+                  }, child: _menuItem(title: 'Report'))
+                  // _menuItem(title: 'Transaction')
+                ],
+              ),
             ],
           ),
            SizedBox(
@@ -311,7 +333,7 @@ class _AdminSidebarState extends State<AdminSidebar> {
                     Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => profile(token: widget.token,)));
+                              builder: (context) => profile(token: widget.token,userID: widget.userID,)));
                   }, child: _menuItem(title: 'Deshan Salitha')),
                   ),
                 ],
