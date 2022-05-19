@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:html';
+import 'dart:js';
 import 'package:abcbank/main.dart';
 import 'package:abcbank/model/SingleUserResponse.dart';
 import 'package:abcbank/model/transactionResponse.dart';
@@ -8,13 +10,15 @@ import 'package:abcbank/navbar/sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'indicator.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_animated_button/flutter_animated_button.dart';
+import 'package:path/path.dart';
 
 class customer extends StatefulWidget {
-  customer({Key? key, this.token}) : super(key: key);
-  String? token;
+  customer({Key? key, required this.token}) : super(key: key);
+  String token;
   bool _isAll = true;
   bool _isWidthrow = false;
   bool _isDeposit = false;
@@ -45,7 +49,7 @@ class _customerState extends State<customer> {
                         style: TextStyle(color: Colors.white, fontSize: 30),
                       ),
                     ),
-                    Sidebar(),
+                    Sidebar(token: widget.token),
                   ],
                 ),
               )),
@@ -468,15 +472,83 @@ class PieChart2State extends State {
 }
 
 class Transaction extends StatelessWidget {
-  const Transaction({Key? key}) : super(key: key);
+  Transaction({Key? key, required this.token}) : super(key: key);
+  String token;
+  String _accNumber = '';
+  String _amount = '';
+  String _datetime = '';
+  // String _dateTime = '';
+  String _DessAccNumber = '';
+  // AuthResponse? authresponse;
+  var body = {};
+  bool _loading = false;
+
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   getAuthenticate();
+  // }
+
+  void transaction() async {
+    // setState(() {
+    //   _loading = true;
+    // });
+    body["accNumber"] = _accNumber;
+    body["amount"] = _amount;
+    body["date_Time"] = _datetime;
+    body["type"] = "t";
+    body["destinationAccID"] = _DessAccNumber;
+    print(_accNumber);
+    print(_amount);
+    print(_datetime);
+    print(_DessAccNumber);
+    print(token);
+    // print(DateFormat.yMMMd().format(DateTime.now()));
+
+    String bodyJason = json.encode(body);
+    var response =
+        await http.post(Uri.parse("http://localhost:8080/transaction"),
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer $token",
+              // "Authorization": "Bearer ${widget.token}",
+              "Access-Control-Allow-Origin": "*"
+            },
+            body: bodyJason);
+
+    print("Status Code");
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      BuildContext? context;
+      Navigator.pushReplacement(
+          context!,
+          MaterialPageRoute(
+              builder: (context) => customer(
+                    token: token,
+                  )));
+      // Navigator.of(context).pushNamed("/SecondPage");
+      Fluttertoast.showToast(
+        msg: "Successfully Transfers",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    }else{Fluttertoast.showToast(
+        msg: "Something Gone Wrong",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);}
+    
+  }
 
   @override
   Widget build(BuildContext context) {
-    String _accNumber = '';
-    String _amount = '';
-    String _datetime = '';
-    // final String _dateTime;
-    String _DessAccNumber = '';
     return Scaffold(
         body: Row(
       children: [
@@ -636,7 +708,7 @@ class Transaction extends StatelessWidget {
                       child: Container(
                         width: 500,
                         height: 50,
-                        child: const Center(child: Text('Widthdraw')),
+                        child: const Center(child: Text('Transaction')),
                       ),
                       onPressed: () {
                         // print(_accNumber)
@@ -644,10 +716,12 @@ class Transaction extends StatelessWidget {
                         print("Widraw Amount : " + _amount);
                         print("Date/Time : " + _datetime);
                         print("Destination Account Number : " + _DessAccNumber);
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => customer()));
+                        transaction();
+
+                        // Navigator.pushReplacement(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => customer()));
                       },
                       style: ElevatedButton.styleFrom(
                           primary: Colors.deepPurple,
@@ -665,7 +739,8 @@ class Transaction extends StatelessWidget {
 }
 
 class Widthdraw extends StatelessWidget {
-  const Widthdraw({Key? key}) : super(key: key);
+  Widthdraw({Key? key,required this.token}) : super(key: key);
+  String token;
 
   @override
   Widget build(BuildContext context) {
@@ -844,7 +919,7 @@ class Widthdraw extends StatelessWidget {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => customer()));
+                                builder: (context) => customer(token: token,)));
                       },
                       style: ElevatedButton.styleFrom(
                           primary: Colors.deepPurple,
@@ -862,7 +937,8 @@ class Widthdraw extends StatelessWidget {
 }
 
 class deposite extends StatelessWidget {
-  const deposite({Key? key}) : super(key: key);
+  deposite({Key? key,required this.token}) : super(key: key);
+  String token;
 
   @override
   Widget build(BuildContext context) {
@@ -1041,7 +1117,7 @@ class deposite extends StatelessWidget {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => customer()));
+                                builder: (context) => customer(token: token,)));
                       },
                       style: ElevatedButton.styleFrom(
                           primary: Colors.deepPurple,
@@ -1120,23 +1196,23 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
       setState(() {});
       print(trresponse!.accounts![0].transactins!.length);
       print(trresponse!.accounts!.length);
-      for (int i= 0; i < trresponse!.accounts!.length; i++){
+      for (int i = 0; i < trresponse!.accounts!.length; i++) {
         print("Inside the account");
-        for(int j = 0; j < trresponse!.accounts![i].transactins!.length; j++){
+        for (int j = 0; j < trresponse!.accounts![i].transactins!.length; j++) {
           // print("inside the transaction");
           // print(trresponse!.accounts![i].transactins![j].type.toString());
-          if(trresponse!.accounts![i].transactins![j].type.toString() == "d"){
+          if (trresponse!.accounts![i].transactins![j].type.toString() == "d") {
             depositList?.add(trresponse!);
-          }else
-          if (trresponse!.accounts![i].transactins![j].type.toString() == "w") {
-          // print(trresponse!);
-          widthdrowList?.add(trresponse!);
-        }else
-        if (trresponse!.accounts![i].transactins![j].type.toString() == "t") {
-          // print(trresponse!.accounts![i].transactins![j].type.toString());
-          transactionList?.add(trresponse!);
-          // print(transactionList![0].accounts![0].transactins![0].type);
-        }
+          } else if (trresponse!.accounts![i].transactins![j].type.toString() ==
+              "w") {
+            // print(trresponse!);
+            widthdrowList?.add(trresponse!);
+          } else if (trresponse!.accounts![i].transactins![j].type.toString() ==
+              "t") {
+            // print(trresponse!.accounts![i].transactins![j].type.toString());
+            transactionList?.add(trresponse!);
+            // print(transactionList![0].accounts![0].transactins![0].type);
+          }
           all?.add(trresponse!);
         }
       }
@@ -1146,14 +1222,14 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
       //     // print(trresponse![i]);
       //     depositList?.add(trresponse!);
       //   }
-        // if (trresponse!.accounts![i].transactins![i].type.toString() == "Type.W") {
-        //   // print(trresponse![i]);
-        //   widthdrowList?.add(trresponse!);
-        // }
-        // if (trresponse!.accounts![i].transactins![i].type.toString() == "Type.T") {
-        //   // print(trresponse![i]);
-        //   transactionList?.add(trresponse!);
-        // }
+      // if (trresponse!.accounts![i].transactins![i].type.toString() == "Type.W") {
+      //   // print(trresponse![i]);
+      //   widthdrowList?.add(trresponse!);
+      // }
+      // if (trresponse!.accounts![i].transactins![i].type.toString() == "Type.T") {
+      //   // print(trresponse![i]);
+      //   transactionList?.add(trresponse!);
+      // }
       // }
       // print("deposite :");
       // print(depositList![0].accounts![0].transactins![0].type);
@@ -1219,21 +1295,31 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                                 ],
                               )),
                               title: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(depositList![index].accounts![index].transactins![index].accNumber.toString()),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(depositList![index].accounts![index].transactins![index].amount.toString()),
-                                )
-                              ],
-                            )
-                            ,
-                            subtitle: Text("Date/Time: " +
-                                depositList![index].accounts![index].transactins![index].dateTime.toString())
-                            );
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(depositList![index]
+                                        .accounts![index]
+                                        .transactins![index]
+                                        .accNumber
+                                        .toString()),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(depositList![index]
+                                        .accounts![index]
+                                        .transactins![index]
+                                        .amount
+                                        .toString()),
+                                  )
+                                ],
+                              ),
+                              subtitle: Text("Date/Time: " +
+                                  depositList![index]
+                                      .accounts![index]
+                                      .transactins![index]
+                                      .dateTime
+                                      .toString()));
                         });
                   } else if (widget.isWidthrow == true) {
                     return ListView.builder(
@@ -1254,25 +1340,36 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                                 ],
                               )),
                               title: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(widthdrowList![index].accounts![index].transactins![index].accNumber.toString()),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    widthdrowList![index].accounts![index].transactins![index].amount.toString(),
-                                    style: TextStyle(
-                                        color: Colors.red, fontSize: 25
-                                        ),
-                                    textAlign: TextAlign.right,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(widthdrowList![index]
+                                        .accounts![index]
+                                        .transactins![index]
+                                        .accNumber
+                                        .toString()),
                                   ),
-                                )
-                              ],
-                            ),
-                            subtitle: Text("Date/Time: " +
-                                widthdrowList![index].accounts![index].transactins![index].dateTime.toString()));
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      widthdrowList![index]
+                                          .accounts![index]
+                                          .transactins![index]
+                                          .amount
+                                          .toString(),
+                                      style: TextStyle(
+                                          color: Colors.red, fontSize: 25),
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              subtitle: Text("Date/Time: " +
+                                  widthdrowList![index]
+                                      .accounts![index]
+                                      .transactins![index]
+                                      .dateTime
+                                      .toString()));
                         });
                   } else if (widget.isTransaction == true) {
                     return ListView.builder(
@@ -1296,12 +1393,20 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                               children: [
                                 Expanded(
                                   flex: 1,
-                                  child: Text(transactionList![index].accounts![index].transactins![index].destinationAccId.toString()),
+                                  child: Text(transactionList![index]
+                                      .accounts![index]
+                                      .transactins![index]
+                                      .destinationAccId
+                                      .toString()),
                                 ),
                                 Expanded(
                                   flex: 1,
                                   child: Text(
-                                    transactionList![index].accounts![index].transactins![index].amount.toString(),
+                                    transactionList![index]
+                                        .accounts![index]
+                                        .transactins![index]
+                                        .amount
+                                        .toString(),
                                     style: TextStyle(
                                         color: Colors.red, fontSize: 25),
                                     textAlign: TextAlign.right,
@@ -1310,7 +1415,11 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                               ],
                             ),
                             subtitle: Text("Date/Time: " +
-                                transactionList![index].accounts![index].transactins![index].dateTime.toString()),
+                                transactionList![index]
+                                    .accounts![index]
+                                    .transactins![index]
+                                    .dateTime
+                                    .toString()),
                           );
                         });
                   } else if (widget.isAll) {
@@ -1335,12 +1444,20 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                               children: [
                                 Expanded(
                                   flex: 1,
-                                  child: Text(all![index].accounts![0].transactins![index].accNumber.toString()),
+                                  child: Text(all![index]
+                                      .accounts![0]
+                                      .transactins![index]
+                                      .accNumber
+                                      .toString()),
                                 ),
                                 Expanded(
                                   flex: 1,
                                   child: Text(
-                                    all![index].accounts![0].transactins![index].amount.toString(),
+                                    all![index]
+                                        .accounts![0]
+                                        .transactins![index]
+                                        .amount
+                                        .toString(),
                                     style: TextStyle(
                                         color: Colors.red, fontSize: 25),
                                     textAlign: TextAlign.right,
@@ -1349,7 +1466,11 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                               ],
                             ),
                             subtitle: Text("Date/Time: " +
-                                all![index].accounts![0].transactins![index].dateTime.toString()),
+                                all![index]
+                                    .accounts![0]
+                                    .transactins![index]
+                                    .dateTime
+                                    .toString()),
                           );
                         });
                   }

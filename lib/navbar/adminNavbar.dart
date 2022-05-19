@@ -6,7 +6,8 @@ import 'package:abcbank/main.dart';
 import 'package:abcbank/CustomerDashbord.dart';
 
 class AdminSidebar extends StatefulWidget {
-  const AdminSidebar({ Key? key }) : super(key: key);
+  AdminSidebar({ Key? key ,required this.token}) : super(key: key);
+  String token;
 
   @override
   State<AdminSidebar> createState() => _AdminSidebarState();
@@ -74,7 +75,7 @@ class _AdminSidebarState extends State<AdminSidebar> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Transaction()));
+                              builder: (context) => Transaction(token: widget.token,)));
                     },
                     child: _submenuItem(title: 'Employees')),
               ]),
@@ -95,7 +96,7 @@ class _AdminSidebarState extends State<AdminSidebar> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Transaction()));
+                              builder: (context) => Transaction(token: widget.token,)));
                     },
                     child: _submenuItem(title: 'Customers')),
               ]),
@@ -116,7 +117,7 @@ class _AdminSidebarState extends State<AdminSidebar> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Transaction()));
+                              builder: (context) => Transaction(token: widget.token,)));
                     },
                     child: _submenuItem(title: 'Account')),
               ]),
@@ -156,7 +157,7 @@ class _AdminSidebarState extends State<AdminSidebar> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Transaction()));
+                              builder: (context) => Transaction(token: widget.token,)));
                     },
                     child: _submenuItem(title: 'Employees')),
               ]),
@@ -177,7 +178,7 @@ class _AdminSidebarState extends State<AdminSidebar> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Transaction()));
+                              builder: (context) => Transaction(token: widget.token,)));
                     },
                     child: _submenuItem(title: 'Customers')),
               ]),
@@ -238,7 +239,7 @@ class _AdminSidebarState extends State<AdminSidebar> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Transaction()));
+                              builder: (context) => Transaction(token: widget.token,)));
                     },
                     child: _submenuItem(title: 'Employees')),
               ]),
@@ -259,7 +260,7 @@ class _AdminSidebarState extends State<AdminSidebar> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Transaction()));
+                              builder: (context) => Transaction(token: widget.token,)));
                     },
                     child: _submenuItem(title: 'Customers')),
               ]),
@@ -280,7 +281,7 @@ class _AdminSidebarState extends State<AdminSidebar> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Transaction()));
+                              builder: (context) => Transaction(token: widget.token,)));
                     },
                     child: _submenuItem(title: 'Account')),
               ]),
@@ -310,7 +311,7 @@ class _AdminSidebarState extends State<AdminSidebar> {
                     Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => profile()));
+                              builder: (context) => profile(token: widget.token,)));
                   }, child: _menuItem(title: 'Deshan Salitha')),
                   ),
                 ],

@@ -5,6 +5,7 @@ import 'package:abcbank/CustomerDashbord.dart';
 import 'package:abcbank/customer.dart';
 import 'package:abcbank/model/Auth_response.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -74,10 +75,18 @@ class _MyHomePageState extends State<MyHomePage> {
       // }
       if (authresponse!.body!.user!.userType == 'admin') {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => AdminHome(token: authresponse!.body!.jwt.toString(),)));
+            context,
+            MaterialPageRoute(
+                builder: (context) => AdminHome(
+                      token: authresponse!.body!.jwt.toString(),
+                    )));
       } else if (authresponse!.body!.user!.userType == 'customer') {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => customer(token: authresponse!.body!.jwt.toString(),)));
+            context,
+            MaterialPageRoute(
+                builder: (context) => customer(
+                      token: authresponse!.body!.jwt.toString(),
+                    )));
       } else if (authresponse!.body!.user!.userType == 'employee') {
         print('employee dashboard');
       } else {
@@ -85,9 +94,16 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
       setState(() {
-        
         _loading = false;
       });
+      Fluttertoast.showToast(
+          msg: "Welcome " + _username.toString(),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 

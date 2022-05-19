@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:abcbank/main.dart';
 import 'package:abcbank/CustomerDashbord.dart';
 class profile extends StatelessWidget {
-  const profile({ Key? key }) : super(key: key);
+  
+
+  profile({ Key? key,required this.token }) : super(key: key);
+  String token;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class profile extends StatelessWidget {
                         "ABC Bank",
                         style: TextStyle(color: Colors.white, fontSize: 30),
                       ),
-                    ),Sidebar()],)),),
+                    ),Sidebar(token: token,)],)),),
         Expanded(
             flex: 9,
             child: Container(

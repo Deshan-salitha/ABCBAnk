@@ -5,7 +5,8 @@ import 'package:abcbank/main.dart';
 import 'package:abcbank/CustomerDashbord.dart';
 
 class Sidebar extends StatefulWidget {
-  const Sidebar({ Key? key }) : super(key: key);
+  Sidebar({ Key? key, required this.token }) : super(key: key);
+  String token;
 
   @override
   State<Sidebar> createState() => _SidebarState();
@@ -52,7 +53,7 @@ class _SidebarState extends State<Sidebar> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Transaction()));
+                              builder: (context) => Transaction(token: widget.token,)));
                     },
                     child: _menuItem(title: 'Transaction')),
               ]),
@@ -70,7 +71,7 @@ class _SidebarState extends State<Sidebar> {
                     Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => deposite()));
+                              builder: (context) => deposite(token: widget.token,)));
                   }, child: _menuItem(title: 'Deposite'))
                   // _menuItem(title: 'Transaction')
                 ],
@@ -89,7 +90,7 @@ class _SidebarState extends State<Sidebar> {
                     Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Widthdraw()));
+                              builder: (context) => Widthdraw(token: widget.token,)));
                   }, child: _menuItem(title: 'Widthdraw'))
                   // _menuItem(title: 'Transaction')
                 ],
@@ -120,7 +121,7 @@ class _SidebarState extends State<Sidebar> {
                     Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => profile()));
+                              builder: (context) => profile(token: widget.token,)));
                   }, child: _menuItem(title: 'Deshan Salitha')),
                   ),
                 ],

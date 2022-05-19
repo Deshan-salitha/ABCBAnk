@@ -65,7 +65,7 @@ class AdminHome extends StatelessWidget {
                         style: TextStyle(color: Colors.white, fontSize: 30),
                       ),
                     ),
-                    AdminSidebar(),
+                    AdminSidebar(token: token),
                   ],
                 ),
               )),
