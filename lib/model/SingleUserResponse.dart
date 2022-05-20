@@ -46,45 +46,45 @@ class Account {
 
 class SingleuserResponse {
     SingleuserResponse({
-        this.accounts,
+        this.uId,
+        this.uFName,
+        this.uLName,
         this.address,
-        this.email,
-        this.ulname,
-        this.ufname,
+        this.userEmail,
         this.password,
         this.userType,
-        this.uid,
+        this.accounts,
     });
 
-    List<Account>? accounts;
+    int? uId;
+    String? uFName;
+    String? uLName;
     String? address;
-    String? email;
-    String? ulname;
-    String? ufname;
+    String? userEmail;
     String? password;
     String? userType;
-    int? uid;
+    List<Account>? accounts;
 
     factory SingleuserResponse.fromJson(Map<String, dynamic> json) => SingleuserResponse(
-        accounts: json["accounts"] == null ? null : List<Account>.from(json["accounts"].map((x) => Account.fromJson(x))),
+        uId: json["uID"] == null ? null : json["uID"],
+        uFName: json["uFName"] == null ? null : json["uFName"],
+        uLName: json["uLName"] == null ? null : json["uLName"],
         address: json["address"] == null ? null : json["address"],
-        email: json["email"] == null ? null : json["email"],
-        ulname: json["ulname"] == null ? null : json["ulname"],
-        ufname: json["ufname"] == null ? null : json["ufname"],
+        userEmail: json["userEmail"] == null ? null : json["userEmail"],
         password: json["password"] == null ? null : json["password"],
         userType: json["userType"] == null ? null : json["userType"],
-        uid: json["uid"] == null ? null : json["uid"],
+        accounts: json["accounts"] == null ? null : List<Account>.from(json["accounts"].map((x) => Account.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
-        "accounts": accounts == null ? null : List<dynamic>.from(accounts!.map((x) => x.toJson())),
+        "uID": uId == null ? null : uId,
+        "uFName": uFName == null ? null : uFName,
+        "uLName": uLName == null ? null : uLName,
         "address": address == null ? null : address,
-        "email": email == null ? null : email,
-        "ulname": ulname == null ? null : ulname,
-        "ufname": ufname == null ? null : ufname,
+        "userEmail": userEmail == null ? null : userEmail,
         "password": password == null ? null : password,
         "userType": userType == null ? null : userType,
-        "uid": uid == null ? null : uid,
+        "accounts": accounts == null ? null : List<dynamic>.from(accounts!.map((x) => x.toJson())),
     };
 }
 
@@ -102,7 +102,7 @@ class Transactin {
     int? accNumber;
     int? amount;
     DateTime? dateTime;
-    String? type;
+    Type? type;
     int? destinationAccId;
 
     factory Transactin.fromJson(Map<String, dynamic> json) => Transactin(
@@ -110,7 +110,7 @@ class Transactin {
         accNumber: json["accNumber"] == null ? null : json["accNumber"],
         amount: json["amount"] == null ? null : json["amount"],
         dateTime: json["date_Time"] == null ? null : DateTime.parse(json["date_Time"]),
-        type: json["type"] == null ? null : json["type"],
+        type: json["type"] == null ? null : typeValues.map[json["type"]],
         destinationAccId: json["destinationAccID"] == null ? null : json["destinationAccID"],
     );
 
@@ -119,7 +119,29 @@ class Transactin {
         "accNumber": accNumber == null ? null : accNumber,
         "amount": amount == null ? null : amount,
         "date_Time": dateTime == null ? null : dateTime!.toIso8601String(),
-        "type": type == null ? null : type,
+        "type": type == null ? null : typeValues.reverse![type],
         "destinationAccID": destinationAccId == null ? null : destinationAccId,
     };
+}
+
+enum Type { D, W, T }
+
+final typeValues = EnumValues({
+    "d": Type.D,
+    "t": Type.T,
+    "w": Type.W
+});
+
+class EnumValues<T> {
+    Map<String, T> map;
+    Map<T, String>? reverseMap;
+
+    EnumValues(this.map);
+
+    Map<T, String>? get reverse {
+        if (reverseMap == null) {
+            reverseMap = map.map((k, v) => new MapEntry(v, k));
+        }
+        return reverseMap;
+    }
 }

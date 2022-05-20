@@ -1,39 +1,15 @@
 // To parse this JSON data, do
 //
-//     final userResponse = userResponseFromJson(jsonString);
+//     final singleAccountResponse = singleAccountResponseFromJson(jsonString);
 
 import 'dart:convert';
 
-UserResponse userResponseFromJson(String str) => UserResponse.fromJson(json.decode(str));
+SingleAccountResponse singleAccountResponseFromJson(String str) => SingleAccountResponse.fromJson(json.decode(str));
 
-String userResponseToJson(UserResponse data) => json.encode(data.toJson());
+String singleAccountResponseToJson(SingleAccountResponse data) => json.encode(data.toJson());
 
-class UserResponse {
-    UserResponse({
-        this.body,
-        this.status,
-        this.message,
-    });
-
-    List<Body>? body;
-    String? status;
-    String? message;
-
-    factory UserResponse.fromJson(Map<String, dynamic> json) => UserResponse(
-        body: json["body"] == null ? null : List<Body>.from(json["body"].map((x) => Body.fromJson(x))),
-        status: json["status"] == null ? null : json["status"],
-        message: json["message"] == null ? null : json["message"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "body": body == null ? null : List<dynamic>.from(body!.map((x) => x.toJson())),
-        "status": status == null ? null : status,
-        "message": message == null ? null : message,
-    };
-}
-
-class Account {
-    Account({
+class SingleAccountResponse {
+    SingleAccountResponse({
         this.accNumber,
         this.owner,
         this.transactins,
@@ -43,15 +19,15 @@ class Account {
     });
 
     int? accNumber;
-    Body? owner;
+    Owner? owner;
     List<Transactin>? transactins;
     int? uId;
     int? balance;
     String? cOd;
 
-    factory Account.fromJson(Map<String, dynamic> json) => Account(
+    factory SingleAccountResponse.fromJson(Map<String, dynamic> json) => SingleAccountResponse(
         accNumber: json["accNumber"] == null ? null : json["accNumber"],
-        owner: json["owner"] == null ? null : Body.fromJson(json["owner"]),
+        owner: json["owner"] == null ? null : Owner.fromJson(json["owner"]),
         transactins: json["transactins"] == null ? null : List<Transactin>.from(json["transactins"].map((x) => Transactin.fromJson(x))),
         uId: json["uID"] == null ? null : json["uID"],
         balance: json["balance"] == null ? null : json["balance"],
@@ -68,47 +44,43 @@ class Account {
     };
 }
 
-class Body {
-    Body({
-        this.uId,
-        this.uFName,
-        this.uLName,
+class Owner {
+    Owner({
         this.address,
-        this.userEmail,
+        this.ulname,
+        this.ufname,
+        this.email,
         this.password,
         this.userType,
-        this.accounts,
+        this.uid,
     });
 
-    int? uId;
-    String? uFName;
-    String? uLName;
     String? address;
-    String? userEmail;
+    String? ulname;
+    String? ufname;
+    String? email;
     String? password;
-    UserType? userType;
-    List<Account>? accounts;
+    String? userType;
+    int? uid;
 
-    factory Body.fromJson(Map<String, dynamic> json) => Body(
-        uId: json["uID"] == null ? null : json["uID"],
-        uFName: json["uFName"] == null ? null : json["uFName"],
-        uLName: json["uLName"] == null ? null : json["uLName"],
+    factory Owner.fromJson(Map<String, dynamic> json) => Owner(
         address: json["address"] == null ? null : json["address"],
-        userEmail: json["userEmail"] == null ? null : json["userEmail"],
+        ulname: json["ulname"] == null ? null : json["ulname"],
+        ufname: json["ufname"] == null ? null : json["ufname"],
+        email: json["email"] == null ? null : json["email"],
         password: json["password"] == null ? null : json["password"],
-        userType: json["userType"] == null ? null : userTypeValues.map[json["userType"]],
-        accounts: json["accounts"] == null ? null : List<Account>.from(json["accounts"].map((x) => Account.fromJson(x))),
+        userType: json["userType"] == null ? null : json["userType"],
+        uid: json["uid"] == null ? null : json["uid"],
     );
 
     Map<String, dynamic> toJson() => {
-        "uID": uId == null ? null : uId,
-        "uFName": uFName == null ? null : uFName,
-        "uLName": uLName == null ? null : uLName,
         "address": address == null ? null : address,
-        "userEmail": userEmail == null ? null : userEmail,
+        "ulname": ulname == null ? null : ulname,
+        "ufname": ufname == null ? null : ufname,
+        "email": email == null ? null : email,
         "password": password == null ? null : password,
-        "userType": userType == null ? null : userTypeValues.reverse![userType],
-        "accounts": accounts == null ? null : List<dynamic>.from(accounts!.map((x) => x.toJson())),
+        "userType": userType == null ? null : userType,
+        "uid": uid == null ? null : uid,
     };
 }
 
@@ -154,14 +126,6 @@ final typeValues = EnumValues({
     "d": Type.D,
     "t": Type.T,
     "w": Type.W
-});
-
-enum UserType { ADMIN, EMPLOYEE, CUSTOMER }
-
-final userTypeValues = EnumValues({
-    "admin": UserType.ADMIN,
-    "customer": UserType.CUSTOMER,
-    "employee": UserType.EMPLOYEE
 });
 
 class EnumValues<T> {

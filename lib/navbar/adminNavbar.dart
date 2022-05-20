@@ -1,5 +1,8 @@
 import 'package:abcbank/Account/AddAccount.dart';
+import 'package:abcbank/Account/ViewAllAccounts.dart';
+import 'package:abcbank/AdminDashboard.dart';
 import 'package:abcbank/Profile.dart';
+import 'package:abcbank/UserProfile.dart';
 import 'package:abcbank/customer.dart';
 import 'package:abcbank/pdf.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +41,12 @@ class _AdminSidebarState extends State<AdminSidebar> {
                   SizedBox(
                     width: 10,
                   ),
-                  TextButton(onPressed: () {}, child: _menuItem(title: 'Home'))
+                  TextButton(onPressed: () {
+                    Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AdminHome(token: widget.token,userID: widget.userID,)));
+                  }, child: _menuItem(title: 'Home'))
                   // _menuItem(title: 'Home')
                 ],
               ),
@@ -60,6 +68,48 @@ class _AdminSidebarState extends State<AdminSidebar> {
                     },
                     child: _menuItem(title: 'View All')),
               ]),
+              // Row(children: [
+              //   SizedBox(
+              //     width: 15,
+              //   ),
+              //   // const Icon(
+              //   //   Icons.monetization_on_outlined,
+              //   //   color: Colors.white,
+              //   //   size: 20,
+              //   // ),
+              //   SizedBox(
+              //     width: 10,
+              //   ),
+              //   TextButton(
+              //       onPressed: () {
+              //         Navigator.pushReplacement(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) => Transaction(token: widget.token,)));
+              //       },
+              //       child: _submenuItem(title: 'Employees')),
+              // ]),
+              // Row(children: [
+              //   // SizedBox(
+              //   //   width: 15,
+              //   // ),
+              //   // // const Icon(
+              //   // //   Icons.monetization_on_outlined,
+              //   // //   color: Colors.white,
+              //   // //   size: 20,
+              //   // // ),
+              //   // SizedBox(
+              //   //   width: 10,
+              //   // ),
+              //   // TextButton(
+              //   //     onPressed: () {
+              //   //       Navigator.pushReplacement(
+              //   //           context,
+              //   //           MaterialPageRoute(
+              //   //               builder: (context) => Transaction(token: widget.token,)));
+              //   //     },
+              //   //     child: _submenuItem(title: 'Customers')),
+              // ]),
               Row(children: [
                 SizedBox(
                   width: 15,
@@ -77,49 +127,7 @@ class _AdminSidebarState extends State<AdminSidebar> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Transaction(token: widget.token,)));
-                    },
-                    child: _submenuItem(title: 'Employees')),
-              ]),
-              Row(children: [
-                SizedBox(
-                  width: 15,
-                ),
-                // const Icon(
-                //   Icons.monetization_on_outlined,
-                //   color: Colors.white,
-                //   size: 20,
-                // ),
-                SizedBox(
-                  width: 10,
-                ),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Transaction(token: widget.token,)));
-                    },
-                    child: _submenuItem(title: 'Customers')),
-              ]),
-              Row(children: [
-                SizedBox(
-                  width: 15,
-                ),
-                // const Icon(
-                //   Icons.monetization_on_outlined,
-                //   color: Colors.white,
-                //   size: 20,
-                // ),
-                SizedBox(
-                  width: 10,
-                ),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Transaction(token: widget.token,)));
+                              builder: (context) => ViewAllAcc(token: widget.token,userID: widget.userID,)));
                     },
                     child: _submenuItem(title: 'Account')),
               ]),
@@ -142,6 +150,27 @@ class _AdminSidebarState extends State<AdminSidebar> {
                   // _menuItem(title: 'Transaction')
                 ],
               ),
+              // Row(children: [
+              //   SizedBox(
+              //     width: 15,
+              //   ),
+              //   // const Icon(
+              //   //   Icons.monetization_on_outlined,
+              //   //   color: Colors.white,
+              //   //   size: 20,
+              //   // ),
+              //   SizedBox(
+              //     width: 10,
+              //   ),
+              //   TextButton(
+              //       onPressed: () {
+              //         Navigator.pushReplacement(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) => Transaction(token: widget.token,)));
+              //       },
+              //       child: _submenuItem(title: 'Employees')),
+              // ]),
               Row(children: [
                 SizedBox(
                   width: 15,
@@ -159,9 +188,9 @@ class _AdminSidebarState extends State<AdminSidebar> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Transaction(token: widget.token,)));
+                              builder: (context) => AddUser(token: widget.token,userID: widget.userID,)));
                     },
-                    child: _submenuItem(title: 'Employees')),
+                    child: _submenuItem(title: 'User')),
               ]),
               Row(children: [
                 SizedBox(
@@ -180,113 +209,92 @@ class _AdminSidebarState extends State<AdminSidebar> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Transaction(token: widget.token,)));
-                    },
-                    child: _submenuItem(title: 'Customers')),
-              ]),
-              Row(children: [
-                SizedBox(
-                  width: 15,
-                ),
-                // const Icon(
-                //   Icons.monetization_on_outlined,
-                //   color: Colors.white,
-                //   size: 20,
-                // ),
-                SizedBox(
-                  width: 10,
-                ),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AddAcc()));
-                    },
-                    child: _submenuItem(title: 'Account')),
-              ]),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  TextButton(onPressed: (){
-                    // Navigator.pushReplacement(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //           builder: (context) => Widthdraw()));
-                  }, child: _menuItem(title: 'Remove'))
-                  // _menuItem(title: 'Transaction')
-                ],
-              ),
-              Row(children: [
-                SizedBox(
-                  width: 15,
-                ),
-                // const Icon(
-                //   Icons.monetization_on_outlined,
-                //   color: Colors.white,
-                //   size: 20,
-                // ),
-                SizedBox(
-                  width: 10,
-                ),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Transaction(token: widget.token,)));
-                    },
-                    child: _submenuItem(title: 'Employees')),
-              ]),
-              Row(children: [
-                SizedBox(
-                  width: 15,
-                ),
-                // const Icon(
-                //   Icons.monetization_on_outlined,
-                //   color: Colors.white,
-                //   size: 20,
-                // ),
-                SizedBox(
-                  width: 10,
-                ),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Transaction(token: widget.token,)));
-                    },
-                    child: _submenuItem(title: 'Customers')),
-              ]),
-              Row(children: [
-                SizedBox(
-                  width: 15,
-                ),
-                // const Icon(
-                //   Icons.monetization_on_outlined,
-                //   color: Colors.white,
-                //   size: 20,
-                // ),
-                SizedBox(
-                  width: 10,
-                ),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Transaction(token: widget.token,)));
+                              builder: (context) => AddAcc(token: widget.token,userID: widget.userID,)));
                     },
                     child: _submenuItem(title: 'Account')),
               ]),
+              // Row(
+              //   children: [
+              //     const Icon(
+              //       Icons.delete,
+              //       color: Colors.white,
+              //       size: 20,
+              //     ),
+              //     SizedBox(
+              //       width: 10,
+              //     ),
+              //     TextButton(onPressed: (){
+              //       // Navigator.pushReplacement(
+              //       //       context,
+              //       //       MaterialPageRoute(
+              //       //           builder: (context) => Widthdraw()));
+              //     }, child: _menuItem(title: 'Remove'))
+              //     // _menuItem(title: 'Transaction')
+              //   ],
+              // ),
+              // Row(children: [
+              //   SizedBox(
+              //     width: 15,
+              //   ),
+              //   // const Icon(
+              //   //   Icons.monetization_on_outlined,
+              //   //   color: Colors.white,
+              //   //   size: 20,
+              //   // ),
+              //   SizedBox(
+              //     width: 10,
+              //   ),
+              //   TextButton(
+              //       onPressed: () {
+              //         Navigator.pushReplacement(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) => Transaction(token: widget.token,)));
+              //       },
+              //       child: _submenuItem(title: 'Employees')),
+              // ]),
+              // Row(children: [
+              //   SizedBox(
+              //     width: 15,
+              //   ),
+              //   // const Icon(
+              //   //   Icons.monetization_on_outlined,
+              //   //   color: Colors.white,
+              //   //   size: 20,
+              //   // ),
+              //   SizedBox(
+              //     width: 10,
+              //   ),
+              //   TextButton(
+              //       onPressed: () {
+              //         Navigator.pushReplacement(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) => Transaction(token: widget.token,)));
+              //       },
+              //       child: _submenuItem(title: 'Customers')),
+              // ]),
+              // Row(children: [
+              //   SizedBox(
+              //     width: 15,
+              //   ),
+              //   // const Icon(
+              //   //   Icons.monetization_on_outlined,
+              //   //   color: Colors.white,
+              //   //   size: 20,
+              //   // ),
+              //   SizedBox(
+              //     width: 10,
+              //   ),
+              //   TextButton(
+              //       onPressed: () {
+              //         Navigator.pushReplacement(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) => Transaction(token: widget.token,)));
+              //       },
+              //       child: _submenuItem(title: 'Account')),
+              // ]),
               Row(
                 children: [
                   const Icon(
@@ -333,7 +341,7 @@ class _AdminSidebarState extends State<AdminSidebar> {
                     Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => profile(token: widget.token,userID: widget.userID,)));
+                              builder: (context) => Userprofile(token: widget.token,userID: widget.userID,)));
                   }, child: _menuItem(title: 'Deshan Salitha')),
                   ),
                 ],

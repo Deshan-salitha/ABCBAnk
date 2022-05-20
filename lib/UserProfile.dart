@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:abcbank/model/SingleUserResponse.dart';
+import 'package:abcbank/navbar/adminNavbar.dart';
 import 'package:abcbank/navbar/sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:abcbank/main.dart';
@@ -9,17 +10,17 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 
 
-class profile extends StatefulWidget {
-  profile({ Key? key,required this.token,required this.userID }) : super(key: key);
+class Userprofile extends StatefulWidget {
+  Userprofile({ Key? key,required this.token,required this.userID }) : super(key: key);
   String token;
   String userID;
 
   @override
-  State<profile> createState() => _profileState();
+  State<Userprofile> createState() => _profileState();
 }
 
 // ignore: camel_case_types
-class _profileState extends State<profile> {
+class _profileState extends State<Userprofile> {
   @override
   void initState() {
     // TODO: implement initState
@@ -68,6 +69,22 @@ class _profileState extends State<profile> {
       });
     }
   }
+
+  void deleteUser()async{
+    setState(() {
+      _loading = true;
+    });
+    // print("$widget");
+    var response = await http.delete(
+      Uri.parse("http://localhost:8080/deletebyid/${widget.userID}"),
+      headers: {"Authorization": "Bearer ${widget.token}"},
+    );
+    print("Status Code from delete");
+    print(response.statusCode);
+    setState(() {
+      _loading = false;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +96,7 @@ class _profileState extends State<profile> {
                         "ABC Bank",
                         style: TextStyle(color: Colors.white, fontSize: 30),
                       ),
-                    ),Sidebar(token: widget.token,userID: widget.userID,)],)),),
+                    ),AdminSidebar(token: widget.token,userID: widget.userID,)],)),),
         Expanded(
             flex: 9,
             child: Container(
@@ -148,6 +165,20 @@ class _profileState extends State<profile> {
                               // Icon(Icons.person,size: 50,),
                              Text(pass,style: TextStyle(fontSize: 20),),Padding(padding: EdgeInsets.all(30)),
                               // TextButton(onPressed: (){}), child: child)
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              // Icon(Icons.person,size: 50,),
+                            //  Text(pass,style: TextStyle(fontSize: 20),),Padding(padding: EdgeInsets.all(30)),
+                              TextButton(
+                                  onPressed: () {
+                                    deleteUser();
+                                  },
+                                  child: const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  )),
                             ],
                           ),
 

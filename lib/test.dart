@@ -60,7 +60,7 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
       userresponse = userResponseFromJson(response.body);
       setState(() {});
       for (int i = 0; i < userresponse!.body!.length; i++) {
-        print(userresponse!.body![i].ufname);
+        print(userresponse!.body![i].uFName);
       }
 
       setState(() {
@@ -84,7 +84,7 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                   "GFG",
                   style: TextStyle(color: Colors.green, fontSize: 15),
                 ),
-                title: Text(userresponse!.body![index].ufname.toString()));
+                title: Text(userresponse!.body![index].uFName.toString()));
           }),
     );
   }

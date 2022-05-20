@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:abcbank/Profile.dart';
+import 'package:abcbank/UserProfile.dart';
 import 'package:abcbank/model/Auth_response.dart';
 import 'package:abcbank/model/transactionResponse.dart';
 import 'package:abcbank/model/user_repose.dart';
@@ -16,10 +17,10 @@ import 'indicator.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-
 class AdminHome extends StatelessWidget {
   String token;
-  AdminHome({Key? key, required this.token,required this.userID}) : super(key: key);
+  AdminHome({Key? key, required this.token, required this.userID})
+      : super(key: key);
   String userID;
   // UserResponse? userresponse;
   // bool loading = false;
@@ -48,7 +49,6 @@ class AdminHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: Row(
         children: [
@@ -59,7 +59,7 @@ class AdminHome extends StatelessWidget {
                 child: Column(
                   // mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [ 
+                  children: [
                     Container(
                       padding: const EdgeInsets.all(50),
                       child: const Text(
@@ -74,7 +74,10 @@ class AdminHome extends StatelessWidget {
                         style: TextStyle(color: Colors.white, fontSize: 30),
                       ),
                     ),
-                    AdminSidebar(token: token,userID: userID.toString(),),
+                    AdminSidebar(
+                      token: token,
+                      userID: userID.toString(),
+                    ),
                   ],
                 ),
               )),
@@ -142,7 +145,7 @@ class AdminHome extends StatelessWidget {
                     Expanded(
                         flex: 1,
                         child: Container(
-                          padding:  EdgeInsets.only(bottom: 10),
+                          padding: EdgeInsets.only(bottom: 10),
                           width: 10,
                           child: TextButton(
                             // color: Colors.red, // background
@@ -154,7 +157,7 @@ class AdminHome extends StatelessWidget {
                     Expanded(
                         flex: 1,
                         child: Container(
-                          padding:  EdgeInsets.only(bottom: 10),
+                          padding: EdgeInsets.only(bottom: 10),
                           width: 10,
                           child: TextButton(
                             // color: Colors.red, // background
@@ -166,7 +169,7 @@ class AdminHome extends StatelessWidget {
                     Expanded(
                         flex: 1,
                         child: Container(
-                          padding:  EdgeInsets.only(bottom: 10),
+                          padding: EdgeInsets.only(bottom: 10),
                           width: 10,
                           child: TextButton(
                             // color: Colors.red, // background
@@ -511,7 +514,8 @@ class PieChart2State extends State {
 // }
 
 class ListVewBuilder extends StatefulWidget {
-  ListVewBuilder({Key? key,required this.token,required this.userID}) : super(key: key);
+  ListVewBuilder({Key? key, required this.token, required this.userID})
+      : super(key: key);
   String userID;
   String token;
   @override
@@ -543,7 +547,7 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
       userresponse = userResponseFromJson(response.body);
       setState(() {});
       for (int i = 0; i < userresponse!.body!.length; i++) {
-        print(userresponse!.body![i].ufname);
+        print(userresponse!.body![i].uFName);
       }
       Timer(Duration(seconds: 3), () {
         setState(() {
@@ -576,23 +580,39 @@ class _ListVewBuilderState extends State<ListVewBuilder> {
                       itemCount: userresponse!.body!.length,
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
-                            leading: Icon(Icons.person),
-                            trailing: Container(
-                                child: Column(
-                              children: [
-                                TextButton(
+                          leading: Icon(Icons.person),
+                          trailing: Container(
+                              child: Column(
+                            children: [
+                              TextButton(
                                   onPressed: () {
                                     Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => profile(token: widget.token,userID: widget.userID.toString())));
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Userprofile(
+                                                token: widget.token,
+                                                userID:
+                                                    userresponse!.body![index].uId.toString())));
                                   },
-                                  child: Icon(Icons.visibility,color: Colors.black87,)
-                                )
-                              ],
-                            )),
-                            title: Text(
-                                userresponse!.body![index].ufname.toString() +" "+ userresponse!.body![index].ulname.toString()),);
+                                  child: Icon(
+                                    Icons.visibility,
+                                    color: Colors.black87,
+                                  )),
+                              // TextButton(
+                              //     onPressed: () {
+                                    
+                              //     },
+                              //     child: Icon(
+                              //       Icons.delete_forever,
+                              //       color: Colors.black87,
+                              //     ))
+                            ],
+                          )),
+                          title: Text(
+                              userresponse!.body![index].uFName.toString() +
+                                  " " +
+                                  userresponse!.body![index].uFName.toString()),
+                        );
                       }),
                 )
         ],
@@ -714,4 +734,3 @@ class _ListVewBuilderTransactionState extends State<ListVewBuilderTransaction> {
     );
   }
 }
-
